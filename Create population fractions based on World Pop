@@ -1,0 +1,115 @@
+library(raster)
+library(maptools)
+library(rgdal)
+
+setwd('/home/vtinney/pop/world_pop/world_pop_16/clip/')
+
+rast <- list.files()
+a <- stack(rast)
+
+a[a == -9999] <- NA
+
+
+f.0 <- raster("usa_f_0_wpgl_2016_clip.tif")
+f.1 <- raster("usa_f_1_wpgl_2016_clip.tif")
+f.5 <- raster("usa_f_5_wpgl_2016_clip.tif")
+f.10 <- raster("usa_f_10_wpgl_2016_clip.tif")
+f.15 <- raster("usa_f_15_wpgl_2016_clip.tif")
+m.0 <- raster("usa_m_0_2016_clip.tif")
+m.1 <- raster("usa_m_1_2016_clip.tif")
+m.5 <- raster("usa_m_5_2016_clip.tif")
+m.10 <- raster("usa_m_10_2016_clip.tif")
+m.15 <- raster("usa_m_15_2016_clip.tif")
+
+f.25 <- raster("usa_f_25_wpgl_2016_clip.tif")
+f.30 <- raster("usa_f_30_wpgl_2016_clip.tif")
+f.35 <- raster("usa_f_35_wpgl_2016_clip.tif")
+f.40 <- raster("usa_f_40_wpgl_2016_clip.tif")
+f.45 <- raster("usa_f_45_wpgl_2016_clip.tif")
+f.50 <- raster("usa_f_50_wpgl_2016_clip.tif")
+f.55 <- raster("usa_f_55_wpgl_2016_clip.tif")
+f.60 <- raster("usa_f_60_wpgl_2016_clip.tif")
+f.65 <- raster("usa_f_65_wpgl_2016_clip.tif")
+f.70 <- raster("usa_f_70_wpgl_2016_clip.tif")
+f.75<- raster("usa_f_75_wpgl_2016_clip.tif")
+f.80 <- raster("usa_f_80_wpgl_2016_clip.tif")
+
+m.25 <- raster("usa_m_25_2016_clip.tif")
+m.30 <- raster("usa_m_30_2016_clip.tif")
+m.35 <- raster("usa_m_35_2016_clip.tif")
+m.40 <- raster("usa_m_40_2016_clip.tif")
+m.45 <- raster("usa_m_45_2016_clip.tif")
+m.50 <- raster("usa_m_50_2016_clip.tif")
+m.55 <- raster("usa_m_55_2016_clip.tif")
+m.60 <- raster("usa_m_60_2016_clip.tif")
+m.65 <- raster("usa_m_65_2016_clip.tif")
+m.70 <- raster("usa_m_70_2016_clip.tif")
+m.75 <- raster("usa_m_75_2016_clip.tif")
+m.80 <- raster("usa_m_80_2016_clip.tif")
+   
+
+setwd('/home/vtinney/pop/world_pop/')
+ba_pop_tot <- raster('usa_ppp_2016_clip.tif')
+ba_pop_tot[ba_pop_tot == -9999] <- NA
+
+#create 25-99
+x25.99 <- f.25 + f.30 + f.35 + f.40 + f.45 + f.50 + f.55 + f.60 + f.65 + f.70 + f.75 + f.80 +
+	  m.25 + m.30 + m.35 + m.40 + m.45 + m.50 + m.55 + m.60 + m.65 + m.70 + m.75 + m.80
+
+
+#create 65-99
+x65.99 <- f.65 + f.70 + f.75 + f.80 +
+	  m.65 + m.70 + m.75 + m.80
+
+
+#create ages 0-17
+x.15.19 <- f.15 + m.15
+frac <-  x.15.19/5 #divide 5 year age group by 1
+frac2 <- frac*2
+frac17 <- x15.19-frac2 #subtract one year from age group 15-19 
+x0.17 <- f.0 + f.1 + f.5 + f.10 + 
+	 m.0 + f.1 + f.5 + f.10 +
+	 frac17
+
+#create population fraction by dividing raster stack by the world pop population total
+pop_frac_25.99 <- x25.99 / ba_pop_tot
+pop_frac_65.99 <- x.65.99 / ba_pop_tot
+pop_frac_0.17 <- x0.17 / ba_pop_tot
+
+#import LandScan raster
+setwd('/home/vtinney/run/pop/')
+day <- raster('bay.day.tif')
+
+conus.25.99 <- pop_frac_25.99*day
+conus.popfrac.65.99 <- pop_frac_65.99*day
+conus.popfrac.0.17 <- pop_frac_0.17*day
+
+setwd('/home/vtinney/pop/world_pop/')
+#write out both rasters
+writeRaster(x25.99, filename="wp.25.99.tif", format="GTiff", overwrite=TRUE)
+writeRaster(x0.17, filename="wp.0.17.tif", format="GTiff", overwrite=TRUE)
+
+writeRaster(pop_frac_25.99, filename='wp.pop_frac_25.99', format="GTiff", overwrite=TRUE)
+writeRaster(pop_frac_65.99, filename='wp.pop_frac_65.99', format="GTiff", overwrite=TRUE)
+writeRaster(pop_frac_0.17, filename='wp.pop_frac_0.17', format="GTiff", overwrite=TRUE)
+
+setwd('/home/vtinney/run/pop/')
+writeRaster(conus.25.99, filename='ls.wp.25.99', format="GTiff", overwrite=TRUE)
+writeRaster(conus.popfrac.65.99, filename='ls.wp.65.99', format="GTiff", overwrite=TRUE)
+writeRaster(conus.popfrac.0.17, filename='ls.wp.0.17', format="GTiff", overwrite=TRUE)
+
+
+######################################################################
+# night
+
+#import LandScan raster
+night <- raster('bay.night.tif')
+
+night.25.99 <- pop_frac_25.99*night
+night.popfrac.65.99 <- pop_frac_65.99*night
+night.popfrac.0.17 <- pop_frac_0.17*night
+
+#write out conus
+writeRaster(night.25.99, filename='ls.wp.night.25.99', format="GTiff", overwrite=TRUE)
+writeRaster(night.popfrac.65.99, filename='ls.wp.night.65.99', format="GTiff", overwrite=TRUE)
+writeRaster(night.popfrac.0.17, filename='ls.wp.night.0.17', format="GTiff", overwrite=TRUE)
