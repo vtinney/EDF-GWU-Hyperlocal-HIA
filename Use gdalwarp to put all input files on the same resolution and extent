@@ -1,0 +1,90 @@
+module load gdal/gcc/2.2.0
+module load proj.4
+
+
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite asthma_c_prev.tif asthma_prev_ped.tif
+
+cd /home/vtinney/run/conc
+
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite 2013_js.tif rs_2013.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite 2014_js.tif rs_2014.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite 2015_js.tif rs_2015.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite 2016_js.tif rs_2016.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite mean_bay_13_16_js.tif rs_mean.13.16.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite mean_bay_15_16_js.tif rs_mean.15.16.tif
+
+cd /home/vtinney/
+
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -srcnodata 2147483647 -dstnodata -9999 -overwrite conus_night1.tif bay.night.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -srcnodata 2147483647 -dstnodata -9999 -overwrite conus_day1.tif bay.day.tif
+
+
+cd /home/vtinney/pollutants
+
+gdalwarp -t_srs "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite Global_LUR_NO2_2011_16b_2.tif no2.clip.tif
+
+cd /home/vtinney/CIESEN/GPW_Full
+
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a000_004bt_2010_cntm_30_sec.tif crop.0.4.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a005_009bt_2010_cntm_30_sec.tif crop.5.9.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a010_014bt_2010_cntm_30_sec.tif crop.10.14.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a015_019bt_2010_cntm_30_sec.tif crop.15.19.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a020_024bt_2010_cntm_30_sec.tif crop.20.24.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a025_029bt_2010_cntm_30_sec.tif crop.25.29.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a030_034bt_2010_cntm_30_sec.tif crop.30.34.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a035_039bt_2010_cntm_30_sec.tif crop.35.39.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a040_044bt_2010_cntm_30_sec.tif crop.40.44.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a045_049bt_2010_cntm_30_sec.tif crop.45.49.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a050_054bt_2010_cntm_30_sec.tif crop.50.54.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a055_059bt_2010_cntm_30_sec.tif crop.55.59.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a060_064bt_2010_cntm_30_sec.tif crop.60.64.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a065_069bt_2010_cntm_30_sec.tif crop.65.69.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a070_074bt_2010_cntm_30_sec.tif crop.70.74.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a075_079bt_2010_cntm_30_sec.tif crop.75.79.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev10_a080_084bt_2010_cntm_30_sec.tif crop.80.84.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite gpw_v4_basic_demographic_characteristics_rev11_a065plusbt_2010_cntm_30_sec.tif crop.65.99.tif
+
+cd /home/vtinney/CIESEN/GPW_total
+
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 gpw_v4_population_count_rev10_2010_30_sec.tif total.pop.tif
+
+cd /home/vtinney/pop/world_pop/world_pop_2016
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_0_wpgl_2016.tif usa_f_0_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_10_wpgl_2016.tif usa_f_10_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_15_wpgl_2016.tif usa_f_15_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_1_wpgl_2016.tif usa_f_1_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_20_wpgl_2016.tif usa_f_20_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_25_wpgl_2016.tif usa_f_25_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_30_wpgl_2016.tif usa_f_30_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_35_wpgl_2016.tif usa_f_35_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_40_wpgl_2016.tif usa_f_40_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_45_wpgl_2016.tif usa_f_45_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_50_wpgl_2016.tif usa_f_50_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_55_wpgl_2016.tif usa_f_55_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_5_wpgl_2016.tif usa_f_5_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_60_wpgl_2016.tif usa_f_60_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_65_wpgl_2016.tif usa_f_65_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_70_wpgl_2016.tif usa_f_70_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_75_wpgl_2016.tif usa_f_75_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_f_80_wpgl_2016.tif usa_f_80_wpgl_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_0_2016.tif usa_m_0_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_10_2016.tif usa_m_10_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_15_2016.tif usa_m_15_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_1_2016.tif usa_m_1_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_20_2016.tif usa_m_20_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_25_2016.tif usa_m_25_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_30_2016.tif usa_m_30_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_40_2016.tif usa_m_40_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_50_2016.tif usa_m_50_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_5_2016.tif usa_m_5_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_65_2016.tif usa_m_65_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_75_2016.tif usa_m_75_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_35_2016.tif usa_m_35_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_80_2016.tif usa_m_80_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_70_2016.tif usa_m_70_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_60_2016.tif usa_m_60_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_55_2016.tif usa_m_55_2016_clip.tif
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_m_45_2016.tif usa_m_45_2016_clip.tif
+
+cd /home/vtinney/pop/world_pop
+gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite usa_ppp_2016.tif usa_ppp_2016_clip.tif
