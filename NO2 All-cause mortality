@@ -1,0 +1,240 @@
+# This is a script to perform HIA for the Bay area - NO2 and all-cause mortality
+# Created: 2019-05-17
+#
+# All read-in files are rasters with the following characteristics: 
+# 2367, 2909, 6885603  (nrow, ncol, ncell)
+# -123.6325, -121.2083, 36.8925, 38.865  (xmin, xmax, ymin, ymax)
+# 0.0008333333, 0.0008333333  (x, y)
+# CRS: +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0
+# 
+#==================================================================
+#Set working directory and load files
+setwd('/home/vtinney/run/')
+library(raster)
+library(sp)
+library(rgdal)
+# ==================================================================
+# Read in shapefiles for cropping full bay extent results
+setwd('/home/vtinney/run/clip/')
+oak <- readOGR(dsn=getwd(), layer='LandScangrid_AQ2')
+ala <- readOGR(dsn=getwd(), layer='alameda')
+# ==================================================================
+# Specify where the files are
+pops <- '/home/vtinney/run/pop/'
+rates <- '/home/vtinney/run/rates/'
+concs <- '/home/vtinney/run/conc/'
+betas <- '/home/vtinney/run/betas/'
+# ==================================================================
+# Adult betas 
+#beta.atkin.ug <- 0.002078254
+#atkin.lower.ug <- 0.000598207
+#atkin.upper.ug <- 0.003536714
+
+#Elderly betas
+#beta.eum <- 0.001209547		
+#eum.lower.ug <- 0.001105454
+#eum.upper.ug <- 0.001365306
+# ==================================================================
+# Adult calc set up
+rate.groups <- c('cbg.25', 'ct.25', 'co.25')
+conc.groups <- c('larkin.ug', 'NO2')
+pop.groups <- c('ls.day.25', 'wp.25', 'ls.night.25', 'wp.night.25')
+beta.groups <- c('beta.atkin.ug', 'atkin.lower.ug', 'atkin.upper.ug')
+
+# ==================================================================
+# Loop Adults for PAF and AF
+
+i=1
+
+for (i in 1:length(betas)){
+print(beta.groups[i])
+	n = raster(paste(betas,beta.groups[i],'.tif',sep=''))
+	for (j in 1:length(conc.groups)){
+	print(conc.groups[j])
+	a = raster(paste(concs,conc.groups[j],'.tif',sep=''))
+		
+		#Bay area AF
+					
+		f4 = paste('/home/vtinney/run/results/no2/all.cause/af/bay/bay.',beta.groups[i],conc.groups[j],'.tif',sep='')
+		af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f4, format="GTiff", overwrite=TRUE)
+
+			#Crop to Alameda PAF
+
+			f5 = paste('/home/vtinney/run/results/no2/all.cause/af/alameda/alameda.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			ala.2 <- crop(af, ala)
+			ala.results <- mask(ala.2, ala)
+			writeRaster(ala.results, filename=f5, format="GTiff", overwrite=TRUE)
+
+			#Crop to Oakland PAF
+
+			f6 = paste('/home/vtinney/run/results/no2/all.cause/af/oak/oak.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			oak.2 <- crop(af, oak)
+			oak.results <- mask(oak.2, oak)
+			writeRaster(oak.results, filename=f6, format="GTiff", overwrite=TRUE)
+
+		for (k in 1:length(rate.groups)){
+		print(rate.groups[k])
+		b = raster(paste(rates,'mortality.',rate.groups[k],'.tif',sep=''))	
+			
+			for (h in 1:length(pop.groups)){
+			print(pop.groups[h])
+			c = raster(paste(pops,'pop.',pop.groups[h],'.tif',sep=''))
+			
+				#Bay area PAF
+						
+				f1 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f1, format="GTiff", overwrite=TRUE)
+
+				#Crop to Alameda PAF
+
+				f2 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				ala.2 <- crop(hia, ala)
+				ala.results <- mask(ala.2, ala)
+				writeRaster(ala.results, filename=f2, format="GTiff", overwrite=TRUE)
+
+				#Crop to Oakland PAF
+
+				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				oak.2 <- crop(hia, oak)
+				oak.results <- mask(oak.2, oak)
+				writeRaster(oak.results, filename=f3, format="GTiff", overwrite=TRUE)
+
+}}}}
+		
+
+
+# ==================================================================
+# All ages calc set up
+rate.groups <- c('cbg.all', 'ct.all', 'zip.all', 'co.all')
+conc.groups <- c('larkin.ug', 'NO2')
+pop.groups <- c('wp.2016', 'bay.day', 'bay.night')
+beta.groups <- c('beta.atkin.ug', 'atkin.lower.ug', 'atkin.upper.ug')
+
+# ==================================================================
+# Loop All ages PAF and AF
+
+i=1
+
+for (i in 1:length(betas)){
+print(beta.groups[i])
+	n = raster(paste(betas,beta.groups[i],'.tif',sep=''))
+	for (j in 1:length(conc.groups)){
+	print(conc.groups[j])
+	a = raster(paste(concs,conc.groups[j],'.tif',sep=''))
+		
+		#Bay area AF
+					
+			f4 = paste('/home/vtinney/run/results/no2/all.cause/af/bay/bay.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f4, format="GTiff", overwrite=TRUE)
+
+			#Crop to Alameda PAF
+
+			f5 = paste('/home/vtinney/run/results/no2/all.cause/af/alameda/alameda.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			ala.2 <- crop(af, ala)
+			ala.results <- mask(ala.2, ala)
+			writeRaster(ala.results, filename=f5, format="GTiff", overwrite=TRUE)
+
+			#Crop to Oakland PAF
+
+			f6 = paste('/home/vtinney/run/results/no2/all.cause/af/oak/oak.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			oak.2 <- crop(af, oak)
+			oak.results <- mask(oak.2, oak)
+			writeRaster(oak.results, filename=f6, format="GTiff", overwrite=TRUE)
+
+		for (k in 1:length(rate.groups)){
+		print(rate.groups[k])
+		b = raster(paste(rates,'mortality.',rate.groups[k],'.tif',sep=''))	
+			
+			for (h in 1:length(pop.groups)){
+			print(pop.groups[h])
+			c = raster(paste(pops,'pop.',pop.groups[h],'.tif',sep=''))
+			
+				#Bay area PAF
+						
+				f1 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f1, format="GTiff", overwrite=TRUE)
+
+				#Crop to Alameda PAF
+
+				f2 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				ala.2 <- crop(hia, ala)
+				ala.results <- mask(ala.2, ala)
+				writeRaster(ala.results, filename=f2, format="GTiff", overwrite=TRUE)
+
+				#Crop to Oakland PAF
+
+				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				oak.2 <- crop(hia, oak)
+				oak.results <- mask(oak.2, oak)
+				writeRaster(oak.results, filename=f3, format="GTiff", overwrite=TRUE)
+
+}}}}
+
+# ==================================================================
+# Elderly calc set up
+rate.groups <- c('cbg.65', 'ct.65', 'co.65')
+conc.groups <- c('larkin.ug', 'NO2')
+pop.groups <- c('ls.day.65', 'wp.65', 'ls.night.65', 'wp.night.65')
+beta.groups <- c('beta.eum.ug', 'eum.lower.ug', 'eum.upper.ug')
+# ==================================================================
+
+# Loop Elderly PAF and AF
+
+i=1
+
+for (i in 1:length(betas)){
+print(beta.groups[i])
+	n = raster(paste(betas,beta.groups[i],'.tif',sep=''))
+	for (j in 1:length(conc.groups)){
+	print(conc.groups[j])
+	a = raster(paste(concs,conc.groups[j],'.tif',sep=''))
+		
+		#Bay area AF
+					
+			f4 = paste('/home/vtinney/run/results/no2/all.cause/af/bay/bay.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f4, format="GTiff", overwrite=TRUE)
+
+			#Crop to Alameda PAF
+
+			f5 = paste('/home/vtinney/run/results/no2/all.cause/af/alameda/alameda.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			ala.2 <- crop(af, ala)
+			ala.results <- mask(ala.2, ala)
+			writeRaster(ala.results, filename=f5, format="GTiff", overwrite=TRUE)
+
+			#Crop to Oakland PAF
+
+			f6 = paste('/home/vtinney/run/results/no2/all.cause/af/oak/oak.',beta.groups[i],conc.groups[j],'.tif',sep='')
+			oak.2 <- crop(af, oak)
+			oak.results <- mask(oak.2, oak)
+			writeRaster(oak.results, filename=f6, format="GTiff", overwrite=TRUE)
+
+
+		for (k in 1:length(rate.groups)){
+		print(rate.groups[k])
+		b = raster(paste(rates,'mortality.',rate.groups[k],'.tif',sep=''))	
+			
+			for (h in 1:length(pop.groups)){
+			print(pop.groups[h])
+			c = raster(paste(pops,'pop.',pop.groups[h],'.tif',sep=''))
+			
+				#Bay area PAF
+						
+				f1 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f1, format="GTiff", overwrite=TRUE)
+
+				#Crop to Alameda PAF
+
+				f2 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				ala.2 <- crop(hia, ala)
+				ala.results <- mask(ala.2, ala)
+				writeRaster(ala.results, filename=f2, format="GTiff", overwrite=TRUE)
+
+				#Crop to Oakland PAF
+
+				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
+				oak.2 <- crop(hia, oak)
+				oak.results <- mask(oak.2, oak)
+				writeRaster(oak.results, filename=f3, format="GTiff", overwrite=TRUE)
+
+}}}}
+
