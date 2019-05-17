@@ -1,0 +1,47 @@
+library(dplyr)
+library(xlsx)
+library(readxl)
+library(raster)
+library(rgdal)
+
+bay_county_asthma_er <- read_excel("C:/Users/vtinney/GoogleDrive/EDF_shared/Rates/Excel/ED visits asthma/bay_county_asthma_er.xlsx")
+bay_asthma_er_zip <- read_excel("C:/Users/vtinney/GoogleDrive/EDF_shared/Rates/Excel/ED visits asthma/bay_asthma_er_zip.xlsx")
+
+# Create zip code ER asthma data with missing imputed from county rates
+names(zip)[12]<-"ZIP"
+
+er.zip <- bay_asthma_er_zip
+
+er.co <- subset(er.co, Geography=='Alameda' | Geography=='Contra Costa' | Geography=='Marin' | 
+                  Geography=='Napa' | Geography=='San Francisco' | Geography=='San Mateo' | 
+                  Geography=='Santa Clara' | Geography=='Sonoma' | Geography=='Solano')
+
+er.co <- subset(er.co, Strata=='Total Population')
+
+adult <- er.zip[er.zip$Age_Group == "Adults (18+)", ] #subset adults zip
+adult.co <- er.co[er.co$"Age Group" == "18 and Over", ] #subset adults county
+names(adult.co)[1]<-"County" #rename
+adult.co2 <- merge(x=zip, y=adult.co, by='County', all=TRUE) #set county to all zip
+adult.co2$ZIP<- as.numeric(as.character(adult.co2$ZIP)) #character to numeric zip
+adult.x <- merge(x=adult.co2, y=adult, by='ZIP', all=TRUE)
+
+
+ped <- er.zip[er.zip$Age_Group == "Children (0-17)", ]
+ped.co <- er.co[er.co$"Age Group" == "Under 18", ]
+names(ped.co)[1]<-"County"
+ped.co2 <- merge(x=zip, y=ped.co, by='County', all=TRUE) #set county to all zip
+ped.co2$ZIP<- as.numeric(as.character(ped.co2$ZIP)) #character to numeric zip
+ped.x <- merge(x=ped.co2, y=ped, by='ZIP', all=TRUE)
+
+
+all <- er.zip[er.zip$Age_Group == "All Ages", ]
+all.co <- er.co[er.co$"Age Group" == "All Ages", ]
+names(all.co)[1]<-"County"
+all.co2 <- merge(x=zip, y=all.co, by='County', all=TRUE) #set county to all zip
+all.co2$ZIP<- as.numeric(as.character(all.co2$ZIP)) #character to numeric zip
+all.x <- merge(x=all.co2, y=all, by='ZIP', all=TRUE)
+
+setwd("C:/Users/vtinney/GoogleDrive/EDF_shared/Rates/Excel/ED visits asthma/")
+write.csv(all.x, file="all.x.csv")
+write.csv(ped.x, file="ped.x.csv")
+write.csv(adult.x, file="adult.x.csv")
