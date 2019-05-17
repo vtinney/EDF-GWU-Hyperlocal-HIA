@@ -1,0 +1,178 @@
+library(raster)
+library(rgdal)
+library(ggplot2)
+library(maptools)
+library(rgeos)
+library(Cairo)
+library(rgdal)
+library(ggmap)
+library(scales)
+library(RColorBrewer)
+library(geojsonio)
+library(broom)
+library(reshape)
+library(rasterVis)
+library(cowplot)
+library(ggspatial)
+library(raster)
+library(dplyr)
+library(mapview)
+library(mapedit)
+library(sf)
+library(readr)
+library(ggplot2)
+
+knitr::opts_chunk$set(
+  out.width = "100%",
+  dpi = 300,
+  fig.width = 8,
+  fig.height = 6,
+  fig.path = 'https://timogrossenbacher.ch/wp-content/uploads/2016/12/tm-',
+  strip.white = T,
+  dev = "png",
+  dev.args = list(png = list(bg = "transparent"))
+)
+
+remove(list = ls(all.names = TRUE))
+
+detachAllPackages <- function() {
+  basic.packages.blank <-  c("stats", 
+                             "graphics", 
+                             "grDevices", 
+                             "utils", 
+                             "datasets", 
+                             "methods", 
+                             "base")
+  basic.packages <- paste("package:", basic.packages.blank, sep = "")
+  
+  package.list <- search()[ifelse(unlist(gregexpr("package:", search())) == 1, 
+                                  TRUE, 
+                                  FALSE)]
+  
+  package.list <- setdiff(package.list, basic.packages)
+  
+  if (length(package.list) > 0)  for (package in package.list) {
+    detach(package, character.only = TRUE)
+    print(paste("package ", package, " detached", sep = ""))
+  }
+}
+
+detachAllPackages()
+
+
+if (!require(rgeos)) {
+  install.packages("rgeos", repos = "http://cran.us.r-project.org")
+  require(rgeos)
+}
+if (!require(rgdal)) {
+  install.packages("rgdal", repos = "http://cran.us.r-project.org")
+  require(rgdal)
+}
+if (!require(raster)) {
+  install.packages("raster", repos = "http://cran.us.r-project.org")
+  require(raster)
+}
+if(!require(ggplot2)) {
+  install.packages("ggplot2", repos="http://cloud.r-project.org")
+  require(ggplot2)
+}
+if(!require(viridis)) {
+  install.packages("viridis", repos="http://cloud.r-project.org")
+  require(viridis)
+}
+if(!require(dplyr)) {
+  install.packages("dplyr", repos = "https://cloud.r-project.org/")
+  require(dplyr)
+}
+if(!require(gtable)) {
+  install.packages("gtable", repos = "https://cloud.r-project.org/")
+  require(gtable)
+}
+if(!require(grid)) {
+  install.packages("grid", repos = "https://cloud.r-project.org/")
+  require(grid)
+}
+if(!require(readxl)) {
+  install.packages("readxl", repos = "https://cloud.r-project.org/")
+  require(readxl)
+}
+if(!require(magrittr)) {
+  install.packages("magrittr", repos = "https://cloud.r-project.org/")
+  require(magrittr)
+}
+
+#Input rasters and crop larkin
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/Concentrations/")
+
+edf <- raster('NO2.tif')
+larkin <- raster('oakland.larkin.tif')
+
+edf <- crop(edf, larkin)
+edf.2 <- mask(edf, larkin)
+
+#Create correlation matrix
+a<-stack(edf.2, larkin)
+jnk=layerStats(a, 'pearson', na.rm=T)
+corr_matrix=jnk$'pearson correlation coefficient'
+corr_matrix
+
+#Graph both separately but on the same scale
+col.2 <- colorRampPalette(c("#556270", "#4ECDC4", "#C7F464", "#FF6B6B", "#C44D58"))
+
+levelplot(a, 
+          margin=FALSE,                       
+          colorkey=list(
+            space='bottom',
+            axis.line=list(col='black'),
+            width=0.75,
+            tick.number=7
+          ),
+          col.regions=col.2,
+          xlab="",
+          ylab="",
+          main='Comparison NO2:
+EDF and Larkin datasets',
+          sub='Range: 1-45 µg/m^3
+    R^2 = 0.495',
+          at=seq(0, 50, len=101),
+          names.attr=c('EDF','Larkin'))
+
+# Map the correlation
+rc <- corLocal(edf.2, larkin, method='spearman')
+
+levelplot(rc, 
+          margin=FALSE,                       
+          colorkey=list(
+            space='bottom',
+            axis.line=list(col='black'),
+            width=0.75,
+            tick.number=7
+          ),
+          col.regions=col.2,
+          xlab="",
+          ylab="",
+          main='Correlation:
+EDF and Larkin datasets',
+          sub='Correlation Coefficient',
+          at=seq(0, 1, len=101))
+
+names(df.rc) <- c('Correlation')
+
+#give lat long
+spts = rasterToPoints(a, spatial = TRUE)
+llprj <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+llpts <- spTransform(spts, CRS(llprj))
+
+#write and export data frame
+x <- as.data.frame(llpts)
+write.csv(x,'no2.comparison.csv')
+
+x$NO2.2 <- as.factor(x$NO2)
+x$oakland.larkin.2 <- as.factor(x$oakland.larkin)
+
+ggplot(x, aes(x=Larkin, y=EDF)) +
+  geom_point(size=2, shape=23) +
+  geom_smooth(type=lm) +
+  labs(title="Scatter plot of EDF and Larkin values for the 
+       West & East Oakland area",
+       subtitle="Concentration: ug/m3")
