@@ -39,22 +39,19 @@ betas <- '/home/vtinney/run/betas/'
 rate.groups <- c('cbg.25', 'ct.25', 'co.25')
 conc.groups <- c('larkin.ug', 'NO2')
 pop.groups <- c('ls.day.25', 'wp.25', 'ls.night.25', 'wp.night.25')
-beta.groups <- c('beta.atkin.ug', 'atkin.lower.ug', 'atkin.upper.ug')
+beta.groups <- c('atkin.ug', 'atkin.lower.ug', 'atkin.upper.ug')
 
 # ==================================================================
 # Loop Adults for PAF and AF
 
-i=1
-
-for (i in 1:length(betas)){
+for (i in 1:length(beta.groups)){
 print(beta.groups[i])
-	n = raster(paste(betas,beta.groups[i],'.tif',sep=''))
+n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))	
 	for (j in 1:length(conc.groups)){
-	print(conc.groups[j])
-	a = raster(paste(concs,conc.groups[j],'.tif',sep=''))
-		
+		print(conc.groups[j])
+		a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))		
 		#Bay area AF
-					
+	
 		f4 = paste('/home/vtinney/run/results/no2/all.cause/af/bay/bay.',beta.groups[i],conc.groups[j],'.tif',sep='')
 		af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f4, format="GTiff", overwrite=TRUE)
 
@@ -86,7 +83,7 @@ print(beta.groups[i])
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f1, format="GTiff", overwrite=TRUE)
 
 				f8 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/rate.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
-				rate100 = overlay(hia, c, fun=function(r1, r2){return((r1*100000)/r2)}, filename=f8, format="GTiff", overwrite=TRUE)
+				rate100 = overlay(hia, c, fun=function(r1, r2){return((r1*100000)/r2)}, filename=f8, format="GTiff", overwrite=TRUE)				
 
 				#Crop to Alameda PAF & rate per 100,000
 
@@ -114,26 +111,22 @@ print(beta.groups[i])
 
 }}}}
 		
-
-
 # ==================================================================
 # All ages calc set up
 rate.groups <- c('cbg.all', 'ct.all', 'zip.all', 'co.all')
 conc.groups <- c('larkin.ug', 'NO2')
 pop.groups <- c('wp.2016', 'bay.day', 'bay.night')
-beta.groups <- c('beta.atkin.ug', 'atkin.lower.ug', 'atkin.upper.ug')
+beta.groups <- c('atkin.ug', 'atkin.lower.ug', 'atkin.upper.ug')
 
 # ==================================================================
 # Loop All ages PAF and AF
 
-i=1
-
-for (i in 1:length(betas)){
+for (i in 1:length(beta.groups)){
 print(beta.groups[i])
-	n = raster(paste(betas,beta.groups[i],'.tif',sep=''))
+	n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 	for (j in 1:length(conc.groups)){
 	print(conc.groups[j])
-	a = raster(paste(concs,conc.groups[j],'.tif',sep=''))
+	a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))
 		
 		#Bay area AF
 					
@@ -168,8 +161,8 @@ print(beta.groups[i])
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f1, format="GTiff", overwrite=TRUE)
 
 				f8 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/rate.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
-				rate100 = overlay(hia, c, fun=function(r1, r2){return((r1*100000)/r2)}, filename=f8, format="GTiff", overwrite=TRUE)
-
+				rate100 = overlay(hia, c, fun=function(r1, r2){return((r1*100000)/r2)}, filename=f8, format="GTiff", overwrite=TRUE)				
+				
 				#Crop to Alameda PAF & rate per 100,000
 
 				f2 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.',beta.groups[i],rate.groups[k],pop.groups[h],conc.groups[j],'.tif',sep='')
@@ -196,25 +189,23 @@ print(beta.groups[i])
 
 }}}}
 		
-
 # ==================================================================
 # Elderly calc set up
 rate.groups <- c('cbg.65', 'ct.65', 'co.65')
 conc.groups <- c('larkin.ug', 'NO2')
 pop.groups <- c('ls.day.65', 'wp.65', 'ls.night.65', 'wp.night.65')
-beta.groups <- c('beta.eum.ug', 'eum.lower.ug', 'eum.upper.ug')
+beta.groups <- c('eum.ug', 'eum.lower.ug', 'eum.upper.ug')
 # ==================================================================
 
 # Loop Elderly PAF and AF
 
-i=1
 
-for (i in 1:length(betas)){
+for (i in 1:length(beta.groups)){
 print(beta.groups[i])
-	n = raster(paste(betas,beta.groups[i],'.tif',sep=''))
+	n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 	for (j in 1:length(conc.groups)){
 	print(conc.groups[j])
-	a = raster(paste(concs,conc.groups[j],'.tif',sep=''))
+	a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))
 		
 		#Bay area AF
 					
@@ -276,5 +267,3 @@ print(beta.groups[i])
 				writeRaster(oak.results2, filename=f10, format="GTiff", overwrite=TRUE)
 
 }}}}
-		
-
