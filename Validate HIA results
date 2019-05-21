@@ -1,0 +1,47 @@
+library(raster)
+library(rgdal)
+
+setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
+
+test <- raster('bay.atkin.ugzip.allbay.daylarkin.ug.tif')
+
+setwd('/home/vtinney/run/')
+pop <- raster('pop/pop.bay.day.tif')
+zip <- raster('rates/mortality.zip.all.tif')
+beta <- raster('betas/beta.atkin.ug.tif')
+larkin <- raster('conc/conc.larkin.ug.tif')
+
+
+#Random sample of the results
+
+z <- sampleRandom(test, size=10, na.rm=TRUE, xy=TRUE, rowcol=TRUE)
+
+# z
+#       row  col         x        y bay.atkin.ugzip.allbay.daylarkin.ug
+# [1,]  434 1714 -122.2046 38.50375                          0.00000000
+# [2,] 1793 2386 -121.6446 37.37125                          0.00000000
+# [3,]  648 1035 -122.7704 38.32542                          0.00000000
+# [4,]  918 1056 -122.7529 38.10042                          0.00000000
+# [5,] 1119 1566 -122.3279 37.93292                          0.01713939
+# [6,]  803  926 -122.8612 38.19625                          0.00000000
+# [7,] 2066 2083 -121.8971 37.14375                          0.00000000
+# [8,]  268 1446 -122.4279 38.64208                          0.00000000
+# [9,]  132 1638 -122.2679 38.75542                          0.00000000
+# [10,] 2153 2842 -121.2646 37.07125                          0.00000000
+
+# Test - use the row and column from results to test
+# [5,] 1119 1566 -122.3279 37.93292                          0.01713939
+
+# Create raster vector
+r <- c(pop, zip, beta, larkin)
+
+# subset based on the above random sample to get the individual raster layers
+r[1119,1566]
+
+# r[1119,1566]
+#     pop.bay.day mortality.zip.all beta.atkin.ug conc.larkin.ug
+#[1,]          40          70.70707   0.002078254          30.08
+
+t <- 40*70.70707*(10^-4)*(1-exp(-0.002078254*30.08))
+# t
+#[1] 0.01713939
