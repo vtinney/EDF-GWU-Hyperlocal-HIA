@@ -14,12 +14,10 @@ setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
 	zip <- raster('rates/mortality.zip.all.tif')
 	beta <- raster('betas/beta.atkin.ug.tif')
 	larkin <- raster('conc/conc.larkin.ug.tif')
-	popfrac <- raster('pop/popfrac.bay.day.tif')
 
 # Read in rate and weighted rate results to test as well
 	setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
 	rate <- raster('rate.atkin.ug.zip.all.bay.day.larkin.ug.tif')
-	wrate <- raster('wrate.atkin.ug.zip.all.bay.day.larkin.ug.tif')
 
 
 #Random sample of the results. Randomly choose a grid cell > 0 in order to test results for HIA and rates.
@@ -47,8 +45,6 @@ z <- sampleRandom(test, size=10, na.rm=TRUE, xy=TRUE, rowcol=TRUE)
 r <- stack(pop, zip, beta, larkin, popfrac, wrate, rate)
 
 # Get the rate values from the same gridcell
-wrate[1097, 1917] 
-#0.000244152
 rate[1097, 1917]
 #45.98666
 
@@ -70,7 +66,3 @@ q <- (0.0262124*100000)/57
 q
 #[1] 45.98667
 
-# matches results from the loop - rate weighted by population fraction (pop in cell/pop in total)
-p <- (0.0262124*100000)/57*5.309192e-06
-p
-#[1] 0.000244152
