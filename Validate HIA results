@@ -1,47 +1,76 @@
+# Validate results received from HIA and rate calculations
+
 library(raster)
 library(rgdal)
 
 setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
 
-test <- raster('bay.atkin.ugzip.allbay.daylarkin.ug.tif')
+# Select results to validate. In this case: All ages, zip code rate, larkin concentrations and atkinson beta
+	test <- raster('bay.atkin.ug.zip.all.bay.day.larkin.ug.tif')
 
-setwd('/home/vtinney/run/')
-pop <- raster('pop/pop.bay.day.tif')
-zip <- raster('rates/mortality.zip.all.tif')
-beta <- raster('betas/beta.atkin.ug.tif')
-larkin <- raster('conc/conc.larkin.ug.tif')
+# Read in all input files
+	setwd('/home/vtinney/run/')
+	pop <- raster('pop/pop.bay.day.tif')
+	zip <- raster('rates/mortality.zip.all.tif')
+	beta <- raster('betas/beta.atkin.ug.tif')
+	larkin <- raster('conc/conc.larkin.ug.tif')
+	popfrac <- raster('pop/popfrac.bay.day.tif')
+
+# Read in rate and weighted rate results to test as well
+	setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
+	rate <- raster('rate.atkin.ug.zip.all.bay.day.larkin.ug.tif')
+	wrate <- raster('wrate.atkin.ug.zip.all.bay.day.larkin.ug.tif')
 
 
-#Random sample of the results
+#Random sample of the results. Randomly choose a grid cell > 0 in order to test results for HIA and rates.
 
 z <- sampleRandom(test, size=10, na.rm=TRUE, xy=TRUE, rowcol=TRUE)
 
 # z
-#       row  col         x        y bay.atkin.ugzip.allbay.daylarkin.ug
-# [1,]  434 1714 -122.2046 38.50375                          0.00000000
-# [2,] 1793 2386 -121.6446 37.37125                          0.00000000
-# [3,]  648 1035 -122.7704 38.32542                          0.00000000
-# [4,]  918 1056 -122.7529 38.10042                          0.00000000
-# [5,] 1119 1566 -122.3279 37.93292                          0.01713939
-# [6,]  803  926 -122.8612 38.19625                          0.00000000
-# [7,] 2066 2083 -121.8971 37.14375                          0.00000000
-# [8,]  268 1446 -122.4279 38.64208                          0.00000000
-# [9,]  132 1638 -122.2679 38.75542                          0.00000000
-# [10,] 2153 2842 -121.2646 37.07125                          0.00000000
+       row  col         x        y bay.atkin.ug.zip.all.bay.day.larkin.ug
+# [1,]  812 1408 -122.4596 38.18875                              0.0000000
+# [2,]  288 1016 -122.7862 38.62542                              0.0000000
+# [3,] 2107 2129 -121.8587 37.10958                              0.0000000
+# [4,]  971 2407 -121.6271 38.05625                              0.0000000
+# [5,] 1886 2565 -121.4954 37.29375                              0.0000000
+# [6,] 1097 1917 -122.0354 37.95125                              0.0262124
+# [7,] 1154 2318 -121.7012 37.90375                              0.0000000
+# [8,] 1712 2245 -121.7621 37.43875                              0.0000000
+# [9,] 1554 2403 -121.6304 37.57042                              0.0000000
+#[10,]  396  602 -123.1313 38.53542                              0.0000000
+
 
 # Test - use the row and column from results to test
-# [5,] 1119 1566 -122.3279 37.93292                          0.01713939
+# [6,] 1097 1917 -122.0354 37.95125                              0.0262124
 
-# Create raster vector
-r <- c(pop, zip, beta, larkin)
+# Create raster stack
+r <- stack(pop, zip, beta, larkin, popfrac, wrate, rate)
+
+# Get the rate values from the same gridcell
+wrate[1097, 1917] 
+#0.000244152
+rate[1097, 1917]
+#45.98666
 
 # subset based on the above random sample to get the individual raster layers
-r[1119,1566]
+r[1097, 1917] # row, column of the grid
+#     pop.bay.day mortality.zip.all beta.atkin.ug conc.larkin.ug popfrac.bay.day
+#[1,]          57          86.39152   0.002078254          26.32    5.309192e-06
 
-# r[1119,1566]
-#     pop.bay.day mortality.zip.all beta.atkin.ug conc.larkin.ug
-#[1,]          40          70.70707   0.002078254          30.08
+# Manual HIA calculation using grid cell values (also did this in excel)
+t <- 57*86.39152*(10^-4)*(1-exp(-0.002078254*26.32))
 
-t <- 40*70.70707*(10^-4)*(1-exp(-0.002078254*30.08))
-# t
-#[1] 0.01713939
+# t - matches results from the loop 
+#[1] 0.0262124 
+
+# test rate
+
+# matches results from the loop - rate per 100,000
+q <- (0.0262124*100000)/57
+q
+#[1] 45.98667
+
+# matches results from the loop - rate weighted by population fraction (pop in cell/pop in total)
+p <- (0.0262124*100000)/57*5.309192e-06
+p
+#[1] 0.000244152
