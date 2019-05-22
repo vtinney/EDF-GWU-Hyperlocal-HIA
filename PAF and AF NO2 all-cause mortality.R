@@ -1,5 +1,5 @@
 # This is a script to perform HIA for the Bay area - NO2 and all-cause mortality
-# Created: 2019-05-17
+# Created: 2019-05-22
 #
 # All read-in files are rasters with the following characteristics: 
 # 2367, 2909, 6885603  (nrow, ncol, ncell)
