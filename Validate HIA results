@@ -59,10 +59,3 @@ t <- 57*86.39152*(10^-4)*(1-exp(-0.002078254*26.32))
 # t - matches results from the loop 
 #[1] 0.0262124 
 
-# test rate
-
-# matches results from the loop - rate per 100,000
-q <- (0.0262124*100000)/57
-q
-#[1] 45.98667
-
