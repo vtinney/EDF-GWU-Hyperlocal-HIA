@@ -1,0 +1,174 @@
+library(raster)
+library(rgdal)
+
+alameda.pop.bay.day <- raster('alameda.pop.bay.day.tif')
+alameda.pop.bay.night <- raster('alameda.pop.bay.night.tif')
+alameda.pop.ls.day.25 <- raster('alameda.pop.ls.day.25.tif')
+alameda.pop.ls.day.65 <- raster('alameda.pop.ls.day.65.tif')
+alameda.pop.ls.night.25 <- raster('alameda.pop.ls.night.25.tif')
+alameda.pop.ls.night.65 <- raster('alameda.pop.ls.night.65.tif')
+alameda.pop.wp.2016 <- raster('alameda.pop.wp.2016.tif')
+alameda.pop.wp.25 <- raster('alameda.pop.wp.25.tif')
+alameda.pop.wp.65 <- raster('alameda.pop.wp.65.tif')
+alameda.pop.wp.night.25 <- raster('alameda.pop.wp.night.25.tif')
+alameda.pop.wp.night.65 <- raster('alameda.pop.wp.night.65.tif')
+oak.pop.bay.day <- raster('oak.pop.bay.day.tif')
+oak.pop.bay.night <- raster('oak.pop.bay.night.tif')
+oak.pop.ls.day.25 <- raster('oak.pop.ls.day.25.tif')
+oak.pop.ls.day.65 <- raster('oak.pop.ls.day.65.tif')
+oak.pop.ls.night.25 <- raster('oak.pop.ls.night.25.tif')
+oak.pop.ls.night.65 <- raster('oak.pop.ls.night.65.tif')
+oak.pop.wp.2016 <- raster('oak.pop.wp.2016.tif')
+oak.pop.wp.25 <- raster('oak.pop.wp.25.tif')
+oak.pop.wp.65 <- raster('oak.pop.wp.65.tif')
+oak.pop.wp.night.25 <- raster('oak.pop.wp.night.25.tif')
+oak.pop.wp.night.65 <- raster('oak.pop.wp.night.65.tif')
+
+
+pop <- c('alameda.pop.bay.day',
+'alameda.pop.bay.night',
+'alameda.pop.ls.day.25',
+'alameda.pop.ls.day.65',
+'alameda.pop.ls.night.25',
+'alameda.pop.ls.night.65',
+'alameda.pop.wp.2016',
+'alameda.pop.wp.25',
+'alameda.pop.wp.65',
+'alameda.pop.wp.night.25',
+'alameda.pop.wp.night.65',
+'oak.pop.bay.day',
+'oak.pop.bay.night',
+'oak.pop.ls.day.25',
+'oak.pop.ls.day.65',
+'oak.pop.ls.night.25',
+'oak.pop.ls.night.65',
+'oak.pop.wp.2016', 
+'oak.pop.wp.25',
+'oak.pop.wp.65', 
+'oak.pop.wp.night.25',
+'oak.pop.wp.night.65')
+
+pops <- '/home/vtinney/run/pop/'
+
+for (i in 1:length(pop)){
+	res(pop[i]) <- 1/1200
+}
+
+for (i in 1:length(pop)){
+print(pop[i])
+	a <- raster(paste(pops,pop[i],'.tif',sep=''))
+ 	sum = cellStats(a, 'sum') 
+  	print(paste('Total population = ',sum,sep=''))
+}
+
+
+alameda.pop.bay.day[] <-1687816
+alameda.pop.bay.night[] <- 1663085
+alameda.pop.ls.day.25[]<- 1003870.24155602
+alameda.pop.ls.day.65[] <- 193663.293529618
+alameda.pop.ls.night.25[] <- 1090503.41404852
+alameda.pop.ls.night.65[] <- 183904.148545617
+alameda.pop.wp.2016[] <- 1550213.58812317
+alameda.pop.wp.25[] <- 800636.25144577
+alameda.pop.wp.65[] <- 149892.750786394
+alameda.pop.wp.night.25[] <- 1106223.0729782
+alameda.pop.wp.night.65[] <- 207107.609037787
+oak.pop.bay.day[] <- 187469
+oak.pop.bay.night[] <- 122246
+oak.pop.ls.day.25[] <- 133322.985278964
+oak.pop.ls.day.65[] <- 32877.5290340893
+oak.pop.ls.night.25[] <- 78936.7501317263
+oak.pop.ls.night.65[] <- 13140.5150450952
+oak.pop.wp.2016[] <- 112306.551568393
+oak.pop.wp.25[] <- 79138.5154559612
+oak.pop.wp.65[] <- 14815.8200435638
+oak.pop.wp.night.25[] <- 78817.616863966
+oak.pop.wp.night.65[] <- 14755.7433968484
+
+
+ls.day.65 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+wp.65 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+ls.night.65 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+wp.night.65 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+ls.day.25 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+wp.25 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+ls.night.25 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+wp.night.25 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+wp.2016 <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+bay.day <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+bay.night <- raster(nrow=2367, ncol=2909, ext=extent(c(-123.6325, -121.2083, 36.8925, 38.865)))
+
+
+proj4string(ls.day.65) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(wp.65) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(ls.night.65) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(wp.night.65) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(ls.day.25) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(wp.25) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(ls.night.25) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(wp.night.25) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(wp.2016) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(bay.day) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+proj4string(bay.night) <- CRS("+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0")
+
+res(ls.day.65) <- 1/1200
+res(wp.65) <- 1/1200
+res(ls.night.65) <- 1/1200
+res(wp.night.65) <- 1/1200
+res(ls.day.25) <- 1/1200
+res(wp.25) <- 1/1200
+res(ls.night.25) <- 1/1200
+res(wp.night.25) <- 1/1200
+res(wp.2016) <- 1/1200
+res(bay.day) <- 1/1200
+res(bay.night) <- 1/1200
+
+
+bay.day[] <- 10736097
+bay.night[] <- 10612428
+ls.day.25[] <- 6626232.7338564
+ls.day.65[] <- 1289574.05227485
+wp.65[] <- 1081377.19116309
+ls.night.25[] <- 6901983.26158476
+ls.night.65[] <- 1264961.30968731
+wp.2016[] <- 10280241.3834997
+wp.25[] <- 5346870.35473186
+wp.night.25[] <- 7057789.20922911
+wp.night.65[] <- 1425741.49545521
+
+
+writeRaster(ls.day.65, "total.ls.day.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(wp.65, "total.wp.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(ls.night.65, "total.ls.night.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(wp.night.65, "total.wp.night.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(ls.day.25, "total.ls.day.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(wp.25, "total.wp.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(ls.night.25, "total.ls.night.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(wp.night.25, "total.wp.night.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(wp.2016, "total.wp.2016.tif", format="GTiff", overwrite=TRUE)
+writeRaster(bay.day, "total.bay.day.tif", format="GTiff", overwrite=TRUE)
+writeRaster(bay.night, "total.bay.night.tif", format="GTiff", overwrite=TRUE)
+
+
+writeRaster(alameda.pop.bay.day, "total.alameda.pop.bay.day.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.bay.night, "total.alameda.pop.bay.night.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.ls.day.25, "total.alameda.pop.ls.day.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.ls.day.65, "total.alameda.pop.ls.day.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.ls.night.25, "total.alameda.pop.ls.night.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.ls.night.65, "total.alameda.pop.ls.night.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.wp.2016, "total.alameda.pop.wp.2016.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.wp.25, "total.alameda.pop.wp.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.wp.65, "total.alameda.pop.wp.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(alameda.pop.wp.night.25, "total.alameda.pop.wp.night.25.tif", format="GTiff", overwrite=TRUE) 
+writeRaster(alameda.pop.wp.night.65, "total.alameda.pop.wp.night.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.bay.day, "total.oak.pop.bay.day.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.bay.night, "total.oak.pop.bay.night.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.ls.day.25, "total.oak.pop.ls.day.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.ls.day.65, "total.oak.pop.ls.day.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.ls.night.25, "total.oak.pop.ls.night.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.ls.night.65, "total.oak.pop.ls.night.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.wp.2016, "total.oak.pop.wp.2016.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.wp.25, "total.oak.pop.wp.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.wp.65, "total.oak.pop.wp.65.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.wp.night.25, "total.oak.pop.wp.night.25.tif", format="GTiff", overwrite=TRUE)
+writeRaster(oak.pop.wp.night.65, "total.oak.pop.wp.night.65.tif", format="GTiff", overwrite=TRUE)
