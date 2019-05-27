@@ -1,0 +1,82 @@
+library(raster)
+library(rgdal)
+library(glue)
+library(dplyr)
+
+
+## AF BAY
+setwd('/home/vtinney/run/results/no2/all.cause/af/bay/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')
+	write.csv(p, 'af.bay.csv')
+
+## AF OAK
+setwd('/home/vtinney/run/results/no2/all.cause/af/oak/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')	
+	write.csv(p, 'af.oak.csv')
+
+## AF ALAMEDA
+setwd('/home/vtinney/run/results/no2/all.cause/af/alameda/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')
+	write.csv(p, 'af.ala.csv')
+
+## PAF BAY
+setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')
+	write.csv(p, 'paf.bay.csv')
+
+## PAF OAK
+setwd('/home/vtinney/run/results/no2/all.cause/paf/oak/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')
+	write.csv(p, 'paf.oak.csv')
+
+## PAF ALAMEDA
+setwd('/home/vtinney/run/results/no2/all.cause/paf/alameda/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')
+	write.csv(p, 'paf.ala.csv')
+
+# POP (for denominator)
+setwd('/home/vtinney/run/pop/')
+	files <- list.files(pattern = "\\.tif*")
+	r <- stack(files)
+	p <- as.data.frame(r, xy=TRUE)
+	setwd('/home/vtinney/run/results/no2/all.cause/df/')
+	write.csv(p, 'pop.csv')
+	
+
+setwd('/home/vtinney/run/results/no2/all.cause/df/')
+ala.paf2 <- read.csv('paf.ala.csv')
+bay.paf2 <- read.csv('paf.bay.csv')
+oak.paf2 <- read.csv('paf.oak.csv')
+pop2 <- read.csv('pop.csv')
+
+#sum the excess deaths for each area
+ala.paf <- colSums(ala.paf2, na.rm=TRUE)
+oak.paf <- colSums(oak.paf2, na.rm=TRUE)
+bay.paf <- colSums(bay.paf2, na.rm=TRUE)
+pop <- colSums(pop2, na.rm=TRUE)
+
+#write.csv(ala.paf, "ala.paf.sum.csv")
+write.csv(bay.paf, "bay.paf.sum.csv")
+write.csv(oak.paf, "oak.paf.sum.csv")
+write.csv(pop, "pop.sum.csv")
+
+
+
