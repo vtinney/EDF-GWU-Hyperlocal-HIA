@@ -62,19 +62,9 @@ x65.99 <- f.65 + f.70 + f.75 + f.80 +
 	  m.65 + m.70 + m.75 + m.80
 
 
-#create ages 0-17
-x.15.19 <- f.15 + m.15
-frac <-  x.15.19/5 #divide 5 year age group by 1
-frac2 <- frac*2
-frac17 <- x15.19-frac2 #subtract one year from age group 15-19 
-x0.17 <- f.0 + f.1 + f.5 + f.10 + 
-	 m.0 + f.1 + f.5 + f.10 +
-	 frac17
-
 #create population fraction by dividing raster stack by the world pop population total
 pop_frac_25.99 <- x25.99 / ba_pop_tot
 pop_frac_65.99 <- x.65.99 / ba_pop_tot
-pop_frac_0.17 <- x0.17 / ba_pop_tot
 
 #import LandScan raster
 setwd('/home/vtinney/run/pop/')
@@ -82,21 +72,10 @@ day <- raster('bay.day.tif')
 
 conus.25.99 <- pop_frac_25.99*day
 conus.popfrac.65.99 <- pop_frac_65.99*day
-conus.popfrac.0.17 <- pop_frac_0.17*day
-
-setwd('/home/vtinney/pop/world_pop/')
-#write out both rasters
-writeRaster(x25.99, filename="wp.25.99.tif", format="GTiff", overwrite=TRUE)
-writeRaster(x0.17, filename="wp.0.17.tif", format="GTiff", overwrite=TRUE)
-
-writeRaster(pop_frac_25.99, filename='wp.pop_frac_25.99', format="GTiff", overwrite=TRUE)
-writeRaster(pop_frac_65.99, filename='wp.pop_frac_65.99', format="GTiff", overwrite=TRUE)
-writeRaster(pop_frac_0.17, filename='wp.pop_frac_0.17', format="GTiff", overwrite=TRUE)
 
 setwd('/home/vtinney/run/pop/')
 writeRaster(conus.25.99, filename='ls.wp.25.99', format="GTiff", overwrite=TRUE)
 writeRaster(conus.popfrac.65.99, filename='ls.wp.65.99', format="GTiff", overwrite=TRUE)
-writeRaster(conus.popfrac.0.17, filename='ls.wp.0.17', format="GTiff", overwrite=TRUE)
 
 
 ######################################################################
