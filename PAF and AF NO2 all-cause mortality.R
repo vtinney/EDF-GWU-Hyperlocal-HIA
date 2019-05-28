@@ -67,15 +67,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Bay area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -119,15 +118,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Alameda area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.alameda.pop.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -171,15 +169,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Oakland area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.oak.pop.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -217,15 +214,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Bay area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -265,15 +261,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Alameda area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.alameda.pop.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -312,15 +307,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Oakland area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.oak.pop.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -344,6 +338,10 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 	for (j in 1:length(conc.groups)){
 		print(conc.groups[j])
 		a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))		
+		
+		f1 = paste('/home/vtinney/run/results/no2/all.cause/af/bay/bay.',beta.groups[i],'.',conc.groups[j],'.tif',sep='')
+		af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f1, format="GTiff", overwrite=TRUE)
+
 
 		for (k in 1:length(rate.groups)){
 		print(rate.groups[k])
@@ -359,15 +357,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Bay area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/bay/bay.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -393,6 +390,9 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 		print(conc.groups[j])
 		a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))		
 
+		f1 = paste('/home/vtinney/run/results/no2/all.cause/af/alameda/alameda.',beta.groups[i],'.',conc.groups[j],'.tif',sep='')
+		af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f1, format="GTiff", overwrite=TRUE)
+
 		for (k in 1:length(rate.groups)){
 		print(rate.groups[k])
 		b = raster(paste(rates,'mortality.',rate.groups[k],'.tif',sep=''))	
@@ -407,15 +407,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Alameda area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.alameda.pop.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/alameda/alameda.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
@@ -440,6 +439,9 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 		print(conc.groups[j])
 		a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))		
 
+		f1 = paste('/home/vtinney/run/results/no2/all.cause/af/oak/oak.',beta.groups[i],'.',conc.groups[j],'.tif',sep='')
+		af = overlay(n, a, fun=function(r1, r2){1-exp(-r1*r2)}, filename=f1, format="GTiff", overwrite=TRUE)
+
 		for (k in 1:length(rate.groups)){
 		print(rate.groups[k])
 		b = raster(paste(rates,'mortality.',rate.groups[k],'.tif',sep=''))	
@@ -454,15 +456,14 @@ n = raster(paste(betas,'beta.',beta.groups[i],'.tif',sep=''))
 				hia = overlay(c, b, n, a, fun=function(r1, r2, r3, r4){return(r1*r2*(10^-4)*(1-exp(-r3*r4)))}, filename=f2, format="GTiff", overwrite=TRUE)
 
 				#Oakland area rate
-				f3 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.rate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)}, filename=f3, format="GTiff", overwrite=TRUE)                                                                                                                                                                                                                                                                                                                                                                			
+				rate = overlay(hia, c, fun=function(r1, r2){return((r1/r2)*100000)})                                                                                                                                                                                                                                                                                                                                                                			
 
 					for (m in 1:length(pop.total)){
 					print(pop.total[m])
 					r = raster(paste(poptotal,'total.oak.pop.',pop.total[m],'.tif',sep=''))
 
 					f4 = paste('/home/vtinney/run/results/no2/all.cause/paf/oak/oak.wrate.',beta.groups[i],'.',rate.groups[k],'.',pop.groups[h],'.',conc.groups[j],'.tif',sep='')
-					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return(((r1*r2)/r3)*100000)}) 
+					wrate100 = overlay(rate, c, r, fun=function(r1, r2, r3){return((r1*r2)/r3)}) 
 
 						if (pop.groups[h] == pop.total[m]){
 
