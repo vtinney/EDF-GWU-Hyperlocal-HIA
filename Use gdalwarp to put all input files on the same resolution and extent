@@ -1,6 +1,7 @@
 module load gdal/gcc/2.2.0
 module load proj.4
 
+#Format is: gdalwarp -te xmin xmax ymin ymax -ts nrow ncol -dstnodata (whatever your symbol for no data is, if applicable) -overwrite (name of input file) (name of outpur file)
 
 gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite asthma_c_prev.tif asthma_prev_ped.tif
 
