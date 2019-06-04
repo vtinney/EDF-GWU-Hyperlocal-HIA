@@ -6,53 +6,51 @@ library(rgdal)
 setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
 
 # Select results to validate. In this case: All ages, zip code rate, larkin concentrations and atkinson beta
-	test <- raster('bay.atkin.ug.zip.all.bay.day.larkin.ug.tif')
+	test <- raster('bay.paf.atkin.point.ppb.zip.all.ls.day.larkin.ppb.tif')
 
 # Read in all input files
 	setwd('/home/vtinney/run/')
-	pop <- raster('pop/pop.bay.day.tif')
+	pop <- raster('pop/bay.pop.ls.day.tif')
 	zip <- raster('rates/mortality.zip.all.tif')
-	beta <- raster('betas/beta.point.atkin.ppb.tif')
+	beta <- raster('betas/beta.atkin.point.ppb.tif')
 	larkin <- raster('conc/conc.larkin.ppb.tif')
 
 
-
-#Random sample of the results. Randomly choose a grid cell > 0 in order to test results for HIA and rates.
-
 z <- sampleRandom(test, size=10, na.rm=TRUE, xy=TRUE, rowcol=TRUE)
 
-# z
-       row  col         x        y bay.atkin.ug.zip.all.bay.day.larkin.ug
-# [1,]  812 1408 -122.4596 38.18875                              0.0000000
-# [2,]  288 1016 -122.7862 38.62542                              0.0000000
-# [3,] 2107 2129 -121.8587 37.10958                              0.0000000
-# [4,]  971 2407 -121.6271 38.05625                              0.0000000
-# [5,] 1886 2565 -121.4954 37.29375                              0.0000000
-# [6,] 1097 1917 -122.0354 37.95125                              0.0262124
-# [7,] 1154 2318 -121.7012 37.90375                              0.0000000
-# [8,] 1712 2245 -121.7621 37.43875                              0.0000000
-# [9,] 1554 2403 -121.6304 37.57042                              0.0000000
-#[10,]  396  602 -123.1313 38.53542                              0.0000000
+       row  col         x        y
+ [1,]  443 1343 -122.5137 38.49625
+ [2,]  469 1702 -122.2146 38.47458
+ [3,] 1364 1903 -122.0471 37.72875
+ [4,]  386 1099 -122.7171 38.54375
+ [5,]  844 1373 -122.4887 38.16208
+ [6,] 1804 1869 -122.0754 37.36208
+ [7,] 1009 1652 -122.2562 38.02458
+ [8,] 1408 2179 -121.8171 37.69208
+ [9,]  486 2197 -121.8021 38.46042
+[10,]  812 1632 -122.2729 38.18875
+      bay.paf.atkin.point.ppb.zip.all.ls.day.larkin.ppb
+ [1,]                                      0.0000000000
+ [2,]                                      0.0000000000
+ [3,]                                      0.0000000000
+ [4,]                                      0.0000000000
+ [5,]                                      0.0000000000
+ [6,]                                      0.0001614253
+ [7,]                                      0.0005729500
+ [8,]                                      0.0000000000
+ [9,]                                      0.0000000000
+[10,]                                      0.0022978685
+>
 
 
-# Test - use the row and column from results to test
-# [6,] 1097 1917 -122.0354 37.95125                              0.0262124
+r <- stack(pop, zip, beta, larkin)
 
-# Create raster stack
-r <- stack(pop, zip, beta, larkin, popfrac, wrate, rate)
 
-# Get the rate values from the same gridcell
-rate[1097, 1917]
-#45.98666
+r[1009, 1652]
+     bay.pop.ls.day mortality.zip.all beta.atkin.point.ppb conc.larkin.ppb
+[1,]              6          72.46377          0.001105454              12
 
-# subset based on the above random sample to get the individual raster layers
-r[1097, 1917] # row, column of the grid
-#     pop.bay.day mortality.zip.all beta.atkin.ug conc.larkin.ug popfrac.bay.day
-#[1,]          57          86.39152   0.002078254          26.32    5.309192e-06
 
-# Manual HIA calculation using grid cell values (also did this in excel)
-t <- 57*86.39152*(10^-4)*(1-exp(-0.002078254*26.32))
 
-# t - matches results from the loop 
-#[1] 0.0262124 
-
+t <- 6*72.46377*(10^-4)*(1-exp(-0.001105454*12))
+t
