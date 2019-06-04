@@ -12,12 +12,9 @@ setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
 	setwd('/home/vtinney/run/')
 	pop <- raster('pop/pop.bay.day.tif')
 	zip <- raster('rates/mortality.zip.all.tif')
-	beta <- raster('betas/beta.atkin.ug.tif')
-	larkin <- raster('conc/conc.larkin.ug.tif')
+	beta <- raster('betas/beta.point.atkin.ppb.tif')
+	larkin <- raster('conc/conc.larkin.ppb.tif')
 
-# Read in rate and weighted rate results to test as well
-	setwd('/home/vtinney/run/results/no2/all.cause/paf/bay/')
-	rate <- raster('rate.atkin.ug.zip.all.bay.day.larkin.ug.tif')
 
 
 #Random sample of the results. Randomly choose a grid cell > 0 in order to test results for HIA and rates.
