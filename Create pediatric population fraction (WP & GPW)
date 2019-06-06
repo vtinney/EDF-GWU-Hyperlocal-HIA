@@ -25,7 +25,7 @@ pop_frac_0.17 <- x0.17 / ba_pop_tot
 
 #import LandScan raster
 setwd('/home/vtinney/run/pop/')
-day <- raster('pop.ls.bay.day.tif')
+day <- raster('bay.pop.ls.day.tif')
 
 conus.popfrac.0.17 <- pop_frac_0.17*day
 
@@ -38,12 +38,12 @@ writeRaster(conus.popfrac.0.17, filename='pop.ls.day.17', format="GTiff", overwr
 
 #import LandScan raster
 setwd('/home/vtinney/run/pop/')
-night <- raster('pop.ls.bay.night.tif')
+night <- raster('bay.pop.ls.night.tif')
 
 night.popfrac.0.17 <- pop_frac_0.17*night
 
 #write out conus
-writeRaster(night.popfrac.0.17, filename='pop.ls.night.17', format="GTiff", overwrite=TRUE)
+writeRaster(night.popfrac.0.17, filename='bay.pop.ls.night.17', format="GTiff", overwrite=TRUE)
 
 
 #======================================================================
@@ -84,7 +84,7 @@ conus.popfrac.0.17 <- pop_frac_0.17*day
 
 
 setwd('/home/vtinney/run/pop/')
-writeRaster(conus.popfrac.0.17, filename='pop.wp.day.17', format="GTiff", overwrite=TRUE)
+writeRaster(conus.popfrac.0.17, filename='bay.pop.wp.day.17', format="GTiff", overwrite=TRUE)
 
 
 #======================================================================
@@ -94,4 +94,4 @@ writeRaster(conus.popfrac.0.17, filename='pop.wp.day.17', format="GTiff", overwr
 night.popfrac.0.17 <- pop_frac_0.17*night
 
 #write out conus
-writeRaster(night.popfrac.0.17, filename='pop.wp.night.17', format="GTiff", overwrite=TRUE)
+writeRaster(night.popfrac.0.17, filename='bay.pop.wp.night.17', format="GTiff", overwrite=TRUE)
