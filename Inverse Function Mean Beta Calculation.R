@@ -22,27 +22,36 @@ setwd("C:/Users/vtinney/Google Drive/EDF_shared/Inv_function/")
 
 # All-cause mortality
 
+# Here I am creating a vector of each range I want to compute the mean beta for.
+# So 40 corresponds with a low of 22, so the range is 22-40, which corresponds to what you see in the curve.
 df.all <- data.frame(pm2.5_high = c(40, 21.9, 14.9, 9.9, 6.9, 4.9, 3.4, 2.4, 1.4),
                 pm2.5_low = c(22,  15, 10, 7, 5, 3.5, 2.5, 1.5, 0.01))
 
 # Those are the parameters from the model
+# This is AV code and corresponds with what is presented in the paper
 B0 <- 0.0059 #intercept slope
 B1 <- 0.0705 # 1/pm2.5 slope
 B0var <- 1.408353e-05  #varcov[1,1]
 B1var <- 0.002551382  #varcov[2,2]
 B0B1cov <- -0.0001884276  #varcov[1,2]
 
+# Here I am just plotting what we did in the excel sheet.
 range <- 1:40
 per.change <- (B0 + ((1/range*B1))*100)
 plot(per.change)
 
+# From AV code:
 # Area under y (from x = a to x = )  = F(b) -F(a)
 #F(pm2.5_high) -F(pm2.5_low) = log(pm2.5_high) - log(pm2.5_low).
 
+# Create the log of concentrations
 df.all$pm2.5_high_log <- log(df.all$pm2.5_high)
 df.all$pm2.5_low_log <- log(df.all$pm2.5_low)
+
+# Create the delta PM - this is the difference between the high and low for the ranges above.
 df.all$delta_pm <- (df.all$pm2.5_high - df.all$pm2.5_low)
 
+# AV code. Calculate the mean beta as: intercept + (Beta1 * ((Log PM high - Log PM low / delta pm))
 df.all["mean_beta"] <- B0 + (B1 * ((df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm ))
 df.all["mean_beta_var"] <- B0var + B1var * ((df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm ) ^ 2 + 2 * (B0B1cov * (df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm)
 df.all["mean_beta_var_se"] <- sqrt(df.all$mean_beta_var)
