@@ -1,0 +1,565 @@
+library(raster)
+library(rgdal)
+library(rasterVis)
+library(cowplot)
+library(gridExtra)
+library(gridExtra)
+library(grid)
+library(ggplot2)
+library(lattice)
+library(gridBase)
+library(purrr)
+library(ggplot2)
+library(ggmap)
+library(osmdata)
+install.packages('ggplotify')
+library(ggplotify)
+#=========================================================================
+# Input shapefiles
+setwd('C:/Users/Veronica Tinney/Google Drive/EDF_shared/Results/no2/af/')
+ala <- readOGR(dsn=getwd(), layer='alameda')
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/Concentrations/EDF/")
+oak <- readOGR(dsn=getwd(), layer='OaklandCensusBlockAQ')
+setwd('C:/Users/Veronica Tinney/Google Drive/EDF_shared/Rates/final_shape/')
+bay <- readOGR(dsn=getwd(), layer='cvdmort_county_25_99')
+
+# Set color ramp
+col.2 <- colorRampPalette(c("#053061", "#2166ac", "#4393c3", "#92c5de", "#d1e5f0", "#f7f7f7", 
+                            "#fddbc7", "#f4a582", "#d6604d", "#b2182b", "#67001f"))
+
+#=========================================================================
+# Alameda - NO2
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/af/no2.af.tifs/alameda/")
+list.files()
+
+titles <- c(
+  "Alameda County, Cardiovascular mortality, all-ages",
+  "Alameda County, All-cause mortality, all-ages",
+  "Alameda County, Cardiovascular mortality, 65-99 years",
+  "Alameda County, All-cause mortality, 65-99 years",
+  "Alameda County, Asthma incidence, 0-17 years",
+  "Alameda County, All-cause mortality, all-ages, adjusted for PM2.5",
+  "Alameda County, Asthma ER visits, 0-17 years, Orellano beta", 
+  "Alameda County, Asthma ER visits, all-ages, Orellano beta",
+  "Alameda County, Asthma ER visits, 0-17 years, Zheng beta", 
+  "Alameda County, Asthma ER visits, all-ages, Zheng beta")
+
+title <- as.data.frame(titles)
+k=10
+files <- list.files(pattern = "\\.tif*", full.names=TRUE)
+for (k in 1:length(files)){
+  print(files[k])
+  af <- raster(paste(files[k]))
+  af <- crop(af, ala)
+  af <- mask(af, ala)
+  
+  log10.af <- log10(af)
+  z.log.10 <- scale(log10.af)
+  min.af <- round(minValue(log10.af),2)
+  max.af <- round(maxValue(log10.af),2)
+  
+  p1 <- levelplot(log10.af,
+                  margin=FALSE,
+                  main=list('Log-transformed 
+                            attributable fraction', cex=.9, font=1),
+                  col.regions=col.2,
+                  at=seq(min.af, max.af, len=101),
+                  scales=list(draw=FALSE),
+                  sub=list(paste0('Range: ',min.af,' to ', max.af,sep=' '),font=1,cex=.7),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  xlim=c(-122.373, -121.469),
+                  ylim=c(37.454, 37.906),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  
+  p2 <- levelplot(z.log.10,
+                  margin=FALSE,
+                  main=list('Z-score of log-transformed
+                            attributable fraction',cex=.9,font=1),
+                  col.regions=col.2,
+                  scales=list(draw=FALSE),
+                  at=seq(-3,3, len=101),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  sub=list(paste0(' '),font=1,cex=.7),
+                  xlim=c(-122.373, -121.469),
+                  ylim=c(37.454, 37.906),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  p <- grid.arrange(p1, p2, widths=c(3,3),
+                    top=textGrob(paste0('
+                                        
+                                        
+                                        ',
+                                        title$titles[k]), gp=gpar(fontfamily = "serif",cex=1,font=2)))
+  pn <- paste0(title$titles[k],'.png',sep='')
+  save_plot(pn, p, base_aspect_ratio = 1.3)
+}
+
+#=========================================================================
+# Oakland - NO2
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/af/no2.af.tifs/oak/gsv/")
+list.files()
+
+titles <- c(
+  "Cardiovascular mortality, all-ages, Larkin et al. 2017",
+  "Cardiovascular mortality, all-ages, GSV",
+  "All-cause mortality, all-ages, Larkin et al. 2017",
+  "All-cause mortality, all-ages, GSV",
+  "Cardiovascular mortality, 65-99 years, Larkin et al. 2017",
+  "Cardiovascular mortality, 65-99 years, GSV",
+  "All-cause mortality, 65-99 years, Larkin et al. 2017",
+  "All-cause mortality, 65-99 years, GSV",
+  "Asthma incidence, 0-17 years, Larkin et al. 2017",
+  "Asthma incidence, 0-17 years, GSV",
+  "All-cause mortality, all-ages, adjusted for PM2.5, Larkin et al. 2017",
+  "All-cause mortality, all-ages, adjusted for PM2.5, GSV",
+  "Asthma ER visits, 0-17 years, Orellano beta, Larkin et al. 2017", 
+  "Asthma ER visits, 0-17 years, Orellano beta, GSV", 
+  "Asthma ER visits, all-ages, Orellano beta, Larkin et al. 2017",
+  "Asthma ER visits, all-ages, Orellano beta, GSV",
+  "Asthma ER visits, 0-17 years, Zheng beta, Larkin et al. 2017", 
+  "Asthma ER visits, 0-17 years, Zheng beta, GSV", 
+  "Asthma ER visits, all-ages, Zheng beta, Larkin et al. 2017",
+  "Asthma ER visits, all-ages, Zheng beta, GSV")
+
+title <- as.data.frame(titles)
+k=20
+files <- list.files(pattern = "\\.tif*", full.names=TRUE)
+for (k in 1:length(files)){
+  print(files[k])
+  af <- raster(paste(files[k]))
+  af <- crop(af, oak)
+  af <- mask(af, oak)
+  af[af == 0] <- NA
+  
+  log10.af <- log10(af)
+  z.log.10 <- scale(log10.af)
+  min.af <- round(minValue(log10.af),2)
+  max.af <- round(maxValue(log10.af),2)
+  
+  p1 <- levelplot(log10.af,
+                  margin=FALSE,
+                  main=list('Log-transformed 
+                            attributable fraction', cex=.9, font=1),
+                  col.regions=col.2,
+                  at=seq(min.af, max.af, len=101),
+                  scales=list(draw=FALSE),
+                  sub=list(paste0('Range: ',min.af,' to ', max.af,sep=' '),font=1,cex=.7),
+                  par.settings=list(panel.background=list(col='grey50'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  xlim=c(-122.331, -122.135),
+                  ylim=c(37.716, 37.835),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  
+  p2 <- levelplot(z.log.10,
+                  margin=FALSE,
+                  main=list('Z-score of log-transformed
+                            attributable fraction',cex=.9,font=1),
+                  col.regions=col.2,
+                  scales=list(draw=FALSE),
+                  at=seq(-3,3, len=101),
+                  par.settings=list(panel.background=list(col='grey50'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  sub=list(paste0(' '),font=1,cex=.7),
+                  xlim=c(-122.331, -122.135),
+                  ylim=c(37.716, 37.835),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  p <- grid.arrange(p1, p2, widths=c(3,3),
+                    top=textGrob(paste0('
+                                        Oakland                                        
+                                        ',title$titles[k]), gp=gpar(fontfamily = "serif",cex=1,font=2)))
+  pn <- paste0(title$titles[k],'.png',sep='')
+  save_plot(pn, p, base_aspect_ratio = 1.3)
+}
+
+
+#=========================================================================
+# Bay - NO2
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/af/no2.af.tifs/bay/")
+list.files()
+
+titles <- c(
+  "Bay Area, Cardiovascular mortality, all-ages",
+  "Bay Area, All-cause mortality, all-ages",
+  "Bay Area, Cardiovascular mortality, 65-99 years",
+  "Bay Area, All-cause mortality, 65-99 years",
+  "Bay Area, Asthma incidence, 0-17 years",
+  "Bay Area, All-cause mortality, all-ages, adjusted for PM2.5",
+  "Bay Area, Asthma ER visits, 0-17 years, Orellano beta", 
+  "Bay Area, Asthma ER visits, all-ages, Orellano beta",
+  "Bay Area, Asthma ER visits, 0-17 years, Zheng beta", 
+  "Bay Area, Asthma ER visits, all-ages, Zheng beta")
+
+title <- as.data.frame(titles)
+k=10
+files <- list.files(pattern = "\\.tif*", full.names=TRUE)
+for (k in 1:length(files)){
+  print(files[k])
+  af <- raster(paste(files[k]))
+  af <- crop(af, bay)
+  af <- mask(af, bay)
+  
+  log10.af <- log10(af)
+  z.log.10 <- scale(log10.af)
+  min.af <- round(minValue(log10.af),2)
+  max.af <- round(maxValue(log10.af),2)
+  
+  p1 <- levelplot(log10.af,
+                  margin=FALSE,
+                  main=list('Log-transformed 
+                            attributable fraction', cex=.9, font=1),
+                  col.regions=col.2,
+                  at=seq(min.af, max.af, len=101),
+                  scales=list(draw=FALSE),
+                  sub=list(paste0('Range: ',min.af,' to ', max.af,sep=' '),font=1,cex=.7),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  xlim=c(-123.6325, -121.2083),
+                  ylim=c(36.8925, 38.865),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  
+  p2 <- levelplot(z.log.10,
+                  margin=FALSE,
+                  main=list('Z-score of log-transformed
+                            attributable fraction',cex=.9,font=1),
+                  col.regions=col.2,
+                  scales=list(draw=FALSE),
+                  at=seq(-3,3, len=101),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  sub=list(paste0(' '),font=1,cex=.7),
+                  xlim=c(-123.6325, -121.2083),
+                  ylim=c(36.8925, 38.865),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  p <- grid.arrange(p1, p2, widths=c(5,5), heights=1,
+                    top=textGrob(paste0('
+                                        
+                                        
+                                        ',title$titles[k]), gp=gpar(fontfamily = "serif",cex=1,font=2)))
+  pn <- paste0(title$titles[k],'.png',sep='')
+  save_plot(pn, p, base_aspect_ratio = 1.3)
+}
+
+#===========================================================================================
+#===========================================================================================
+#=========================================================================
+# Alameda - PM2.5
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/af/pm.af.tifs/alameda/")
+list.files()
+
+titles <- c(
+  "Alameda County, All-cause mortality, 2013",
+  "Alameda County, All-cause mortality, 2014",
+  "Alameda County, All-cause mortality, 2015",
+  "Alameda County, All-cause mortality, 2016",
+  "Alameda County, All-cause mortality, mean 2013-2016",
+  "Alameda County, All-cause mortality, mean 2015-2016")
+
+title <- as.data.frame(titles)
+k=10
+files <- list.files(pattern = "\\.tif*", full.names=TRUE)
+for (k in 1:length(files)){
+  print(files[k])
+  af <- raster(paste(files[k]))
+  af <- crop(af, ala)
+  af <- mask(af, ala)
+  
+  log10.af <- log10(af)
+  z.log.10 <- scale(log10.af)
+  min.af <- round(minValue(log10.af),2)
+  max.af <- round(maxValue(log10.af),2)
+  
+  p1 <- levelplot(log10.af,
+                  margin=FALSE,
+                  main=list('Log-transformed 
+                            attributable fraction', cex=.9, font=1),
+                  col.regions=col.2,
+                  at=seq(min.af, max.af, len=101),
+                  scales=list(draw=FALSE),
+                  sub=list(paste0('Range: ',min.af,' to ', max.af,sep=' '),font=1,cex=.7),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  xlim=c(-122.373, -121.469),
+                  ylim=c(37.454, 37.906),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  
+  p2 <- levelplot(z.log.10,
+                  margin=FALSE,
+                  main=list('Z-score of log-transformed
+                            attributable fraction',cex=.9,font=1),
+                  col.regions=col.2,
+                  scales=list(draw=FALSE),
+                  at=seq(-3,3, len=101),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  sub=list(paste0(' '),font=1,cex=.7),
+                  xlim=c(-122.373, -121.469),
+                  ylim=c(37.454, 37.906),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  p <- grid.arrange(p1, p2, widths=c(3,3),
+                    top=textGrob(paste0('
+                                        
+                                        
+                                        ',title$titles[k]), gp=gpar(fontfamily = "serif",cex=1,font=2)))
+  pn <- paste0(title$titles[k],'.png',sep='')
+  save_plot(pn, p, base_aspect_ratio = 1.3)
+}
+
+#=========================================================================
+# Oakland - PM2.5
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/af/pm.af.tifs/oak/")
+list.files()
+
+titles <- c(
+  "Oakland, All-cause mortality, 2013",
+  "Oakland, All-cause mortality, 2014",
+  "Oakland, All-cause mortality, 2015",
+  "Oakland, All-cause mortality, 2016",
+  "Oakland, All-cause mortality, mean 2013-2016",
+  "Oakland, All-cause mortality, mean 2015-2016")
+title <- as.data.frame(titles)
+k=20
+files <- list.files(pattern = "\\.tif*", full.names=TRUE)
+for (k in 1:length(files)){
+  print(files[k])
+  af <- raster(paste(files[k]))
+  af <- crop(af, oak)
+  af <- mask(af, oak)
+  af[af == 0] <- NA
+  
+  log10.af <- log10(af)
+  z.log.10 <- scale(log10.af)
+  min.af <- round(minValue(log10.af),2)
+  max.af <- round(maxValue(log10.af),2)
+  
+  p1 <- levelplot(log10.af,
+                  margin=FALSE,
+                  main=list('Log-transformed 
+                            attributable fraction', cex=.9, font=1),
+                  col.regions=col.2,
+                  at=seq(min.af, max.af, len=101),
+                  scales=list(draw=FALSE),
+                  sub=list(paste0('Range: ',min.af,' to ', max.af,sep=' '),font=1,cex=.7),
+                  par.settings=list(panel.background=list(col='grey50'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  xlim=c(-122.331, -122.135),
+                  ylim=c(37.716, 37.835),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  
+  p2 <- levelplot(z.log.10,
+                  margin=FALSE,
+                  main=list('Z-score of log-transformed
+                            attributable fraction',cex=.9,font=1),
+                  col.regions=col.2,
+                  scales=list(draw=FALSE),
+                  at=seq(-3,3, len=101),
+                  par.settings=list(panel.background=list(col='grey50'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  sub=list(paste0(' '),font=1,cex=.7),
+                  xlim=c(-122.331, -122.135),
+                  ylim=c(37.716, 37.835),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  p <- grid.arrange(p1, p2, widths=c(3,3),
+                    top=textGrob(paste0('
+                                        
+                                        
+                                        ',title$titles[k]), gp=gpar(fontfamily = "serif",cex=1,font=2)))
+  pn <- paste0(title$titles[k],'.png',sep='')
+  save_plot(pn, p, base_aspect_ratio = 1.3)
+}
+
+
+#=========================================================================
+# Bay - PM2.5
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/af/pm.af.tifs/bay/")
+list.files()
+
+titles <- c(
+  "Bay Area, All-cause mortality, 2013",
+  "Bay Area, All-cause mortality, 2014",
+  "Bay Area, All-cause mortality, 2015",
+  "Bay Area, All-cause mortality, 2016",
+  "Bay Area, All-cause mortality, mean 2013-2016",
+  "Bay Area, All-cause mortality, mean 2015-2016")
+
+title <- as.data.frame(titles)
+k=10
+files <- list.files(pattern = "\\.tif*", full.names=TRUE)
+for (k in 1:length(files)){
+  print(files[k])
+  af <- raster(paste(files[k]))
+  af <- crop(af, bay)
+  af <- mask(af, bay)
+  
+  log10.af <- log10(af)
+  z.log.10 <- scale(log10.af)
+  min.af <- round(minValue(log10.af),2)
+  max.af <- round(maxValue(log10.af),2)
+  
+  p1 <- levelplot(log10.af,
+                  margin=FALSE,
+                  main=list('Log-transformed 
+                            attributable fraction', cex=.9, font=1),
+                  col.regions=col.2,
+                  at=seq(min.af, max.af, len=101),
+                  scales=list(draw=FALSE),
+                  sub=list(paste0('Range: ',min.af,' to ', max.af,sep=' '),font=1,cex=.7),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  xlim=c(-123.6325, -121.2083),
+                  ylim=c(36.8925, 38.865),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  
+  p2 <- levelplot(z.log.10,
+                  margin=FALSE,
+                  main=list('Z-score of log-transformed
+                            attributable fraction',cex=.9,font=1),
+                  col.regions=col.2,
+                  scales=list(draw=FALSE),
+                  at=seq(-3,3, len=101),
+                  par.settings=list(panel.background=list(col='grey25'), 
+                                    alpha=0.3, 
+                                    axis.text=list(fontfamily="serif"),
+                                    par.xlab.text=list(fontfamily="serif"),
+                                    par.ylab.text=list(fontfamily="serif"),
+                                    par.main.text=list(fontfamily="serif"),
+                                    par.sub.text=list(fontfamily="serif")),
+                  xlab=NULL,
+                  ylab=NULL,
+                  sub=list(paste0(' '),font=1,cex=.7),
+                  xlim=c(-123.6325, -121.2083),
+                  ylim=c(36.8925, 38.865),
+                  colorkey=list(
+                    space='bottom',
+                    axis.line=list(col='black'),
+                    width=0.75
+                  ))
+  p <- grid.arrange(p1, p2, widths=c(5,5), heights=1,
+                    top=textGrob(paste0('
+                                        
+                                        
+                                        ',title$titles[k]), gp=gpar(fontfamily = "serif",cex=1,font=2)))
+  pn <- paste0(title$titles[k],'.png',sep='')
+  save_plot(pn, p, base_aspect_ratio = 1.3)
+}
