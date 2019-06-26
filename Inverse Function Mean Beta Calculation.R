@@ -13,7 +13,7 @@ library(dplyr)
 library(foreign)
 library(tidyr)
 
-setwd("C:/Users/vtinney/Google Drive/EDF_shared/Inv_function/")
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/Inv_function/")
 #########################################################
 #### Data frame (df) must contatin the following variables;
 # Example data frame.
@@ -22,36 +22,27 @@ setwd("C:/Users/vtinney/Google Drive/EDF_shared/Inv_function/")
 
 # All-cause mortality
 
-# Here I am creating a vector of each range I want to compute the mean beta for.
-# So 40 corresponds with a low of 22, so the range is 22-40, which corresponds to what you see in the curve.
 df.all <- data.frame(pm2.5_high = c(40, 21.9, 14.9, 9.9, 6.9, 4.9, 3.4, 2.4, 1.4),
                 pm2.5_low = c(22,  15, 10, 7, 5, 3.5, 2.5, 1.5, 0.01))
 
 # Those are the parameters from the model
-# This is AV code and corresponds with what is presented in the paper
 B0 <- 0.0059 #intercept slope
 B1 <- 0.0705 # 1/pm2.5 slope
 B0var <- 1.408353e-05  #varcov[1,1]
 B1var <- 0.002551382  #varcov[2,2]
 B0B1cov <- -0.0001884276  #varcov[1,2]
 
-# Here I am just plotting what we did in the excel sheet.
 range <- 1:40
 per.change <- (B0 + ((1/range*B1))*100)
 plot(per.change)
 
-# From AV code:
 # Area under y (from x = a to x = )  = F(b) -F(a)
 #F(pm2.5_high) -F(pm2.5_low) = log(pm2.5_high) - log(pm2.5_low).
 
-# Create the log of concentrations
 df.all$pm2.5_high_log <- log(df.all$pm2.5_high)
 df.all$pm2.5_low_log <- log(df.all$pm2.5_low)
-
-# Create the delta PM - this is the difference between the high and low for the ranges above.
 df.all$delta_pm <- (df.all$pm2.5_high - df.all$pm2.5_low)
 
-# AV code. Calculate the mean beta as: intercept + (Beta1 * ((Log PM high - Log PM low / delta pm))
 df.all["mean_beta"] <- B0 + (B1 * ((df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm ))
 df.all["mean_beta_var"] <- B0var + B1var * ((df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm ) ^ 2 + 2 * (B0B1cov * (df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm)
 df.all["mean_beta_var_se"] <- sqrt(df.all$mean_beta_var)
@@ -107,3 +98,108 @@ df.cvd$delta_pm <- (df.cvd$pm2.5_high - df.cvd$pm2.5_low)
 
 df.cvd["mean_beta"] <- B0 + (B1 * ((df.cvd$pm2.5_high_log - df.cvd$pm2.5_low_log) / df.cvd$delta_pm ))
 write.csv(df.cvd, "inv.cvd.csv")
+
+#////////////////////////////////////////////////////////////////////////////////////////////////////
+#////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#########################################################
+##
+## Nonlinear concentraton-response function: Health impact Calculation applying parametric function
+##
+## Date February 27, 2019
+## by Alina Vodonos Zilberg (avodonos@hsph.harvard.edu)
+## Version 3 - updated Veronica Southerland 
+## Date June, 26, 2019
+#########################################################
+
+library(readr)
+library(dplyr)
+library(foreign)
+library(tidyr)
+
+setwd("C:/Users/Veronica Tinney/Google Drive/EDF_shared/Inv_function/")
+#########################################################
+#### Data frame (df) must contatin the following variables;
+# Example data frame.
+#Let's say we want to calculate the excess deaths addtibutble to reducing the PM2.5 levels from 'pm2.5_high' to 'pm2.5_low', 
+#first we need to compute the average slope between those two concentration points.
+
+# All-cause mortality
+
+df.all <- data.frame(pm2.5_high = c(2:40),
+                     pm2.5_low = c(1:39))
+
+# Those are the parameters from the model
+B0 <- 0.0059 #intercept slope
+B1 <- 0.0705 # 1/pm2.5 slope
+B0var <- 1.408353e-05  #varcov[1,1]
+B1var <- 0.002551382  #varcov[2,2]
+B0B1cov <- -0.0001884276  #varcov[1,2]
+
+range <- 1:40
+per.change <- (B0 + ((1/range*B1))*100)
+plot(per.change)
+
+# Area under y (from x = a to x = )  = F(b) -F(a)
+#F(pm2.5_high) -F(pm2.5_low) = log(pm2.5_high) - log(pm2.5_low).
+
+df.all$pm2.5_high_log <- log(df.all$pm2.5_high)
+df.all$pm2.5_low_log <- log(df.all$pm2.5_low)
+df.all$delta_pm <- (df.all$pm2.5_high - df.all$pm2.5_low)
+
+df.all["mean_beta"] <- B0 + (B1 * ((df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm ))
+df.all["mean_beta_var"] <- B0var + B1var * ((df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm ) ^ 2 + 2 * (B0B1cov * (df.all$pm2.5_high_log - df.all$pm2.5_low_log) / df.all$delta_pm)
+df.all["mean_beta_var_se"] <- sqrt(df.all$mean_beta_var)
+df.all["mean_beta_low"] <- (df.all$mean_beta - (1.96 * df.all$mean_beta_var_se))
+df.all["mean_beta_high"] <- (df.all$mean_beta + (1.96 * df.all$mean_beta_var_se))
+write.csv(df.all, 'inv.all.all.csv')
+
+#########################################################
+
+# All-cause mortality ELDERLY
+
+df.eld <- data.frame(pm2.5_high = c(2:40),
+                     pm2.5_low = c(1:39))
+
+# Those are the parameters from the model
+B0 <- 0.0089 #intercept slope
+B1 <- 0.0705 # 1/pm2.5 slope
+
+range <- 1:40
+per.change <- (B0 + ((1/range*B1))*100)
+plot(per.change)
+
+# Area under y (from x = a to x = )  = F(b) -F(a)
+#F(pm2.5_high) -F(pm2.5_low) = log(pm2.5_high) - log(pm2.5_low).
+
+df.eld$pm2.5_high_log <- log(df.eld$pm2.5_high)
+df.eld$pm2.5_low_log <- log(df.eld$pm2.5_low)
+df.eld$delta_pm <- (df.eld$pm2.5_high - df.eld$pm2.5_low)
+
+df.eld["mean_beta"] <- B0 + (B1 * ((df.eld$pm2.5_high_log - df.eld$pm2.5_low_log) / df.eld$delta_pm ))
+write.csv(df.eld, "inv.eld.all.csv")
+#########################################################
+
+# CVD mortality all ages
+
+df.cvd <- data.frame(pm2.5_high = c(2:40),
+                     pm2.5_low = c(1:39))
+
+# Those are the parameters from the model
+B0 <- 0.0079 #intercept slope
+B1 <- 0.0705 # 1/pm2.5 slope
+
+range <- 1:40
+per.change <- (B0 + ((1/range*B1))*100)
+plot(per.change)
+
+# Area under y (from x = a to x = )  = F(b) -F(a)
+#F(pm2.5_high) -F(pm2.5_low) = log(pm2.5_high) - log(pm2.5_low).
+
+df.cvd$pm2.5_high_log <- log(df.cvd$pm2.5_high)
+df.cvd$pm2.5_low_log <- log(df.cvd$pm2.5_low)
+df.cvd$delta_pm <- (df.cvd$pm2.5_high - df.cvd$pm2.5_low)
+
+df.cvd["mean_beta"] <- B0 + (B1 * ((df.cvd$pm2.5_high_log - df.cvd$pm2.5_low_log) / df.cvd$delta_pm ))
+write.csv(df.cvd, "inv.cvd.all.csv")
+
