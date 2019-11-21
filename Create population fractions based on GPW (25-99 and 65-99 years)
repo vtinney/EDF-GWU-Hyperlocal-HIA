@@ -2,6 +2,10 @@ library(raster)
 library(maptools)
 library(rgdal)
 
+#===================================================================================
+# Adult and Elderly
+#===================================================================================
+
 setwd('/home/vtinney/CIESEN/GPW_Full/crop/')
 
 x20.24 <- raster("crop.20.24.tif")
@@ -29,20 +33,7 @@ x25.99 <- x25.29 + x30.34 + x35.39 + x40.44 + x45.49 + x50.54 + x55.59 + x60.64 
 #create population fraction by dividing raster stack by the gpw population total
 pop_frac_25.99 <- x25.99 / ba_pop_tot
 pop_frac_65.99 <- x.65.99 / ba_pop_tot
-#import LandScan raster
-setwd('/home/vtinney/run/pop/')
-day <- raster('bay.day.tif')
 
-conus.25.99 <- pop_frac_25.99*day
-conus.popfrac.65.99 <- pop_frac_65.99*day
-
-#write out conus
-writeRaster(conus.25.99, filename='ls.25.99', format="GTiff", overwrite=TRUE)
-writeRaster(conus.popfrac.65.99, filename='ls.65.99', format="GTiff", overwrite=TRUE)
-
-
-######################################################################
-# night
 
 #import LandScan raster
 setwd('/home/vtinney/run/pop/')
@@ -54,3 +45,38 @@ night.popfrac.65.99 <- pop_frac_65.99*night
 #write out conus
 writeRaster(night.25.99, filename='ls.night.25.99', format="GTiff", overwrite=TRUE)
 writeRaster(night.popfrac.65.99, filename='ls.night.65.99', format="GTiff", overwrite=TRUE)
+
+#===================================================================================
+# Pediatric
+#===================================================================================
+setwd('/home/vtinney/CIESEN/GPW_Full/crop/')
+
+x0.4 <- raster("crop.0.4.tif")
+x5.9 <- raster("crop.5.9.tif")  
+x10.14 <- raster("crop.10.14.tif") 
+x15.19 <- raster("crop.15.19.tif")
+
+setwd('/home/vtinney/CIESEN/GPW_total/')
+ba_pop_tot <- raster('total.pop.tif')
+
+#create ages 0-17
+frac <- x15.19/5 #divide 5 year age group by 1
+frac2 <- frac*2
+frac17 <- x15.19-frac2 #subtract one year from age group 15-19 
+x0.17 <- x0.4 + x5.9 + x10.14 + frac17 #sum for ages 0-17
+
+
+#create population fraction by dividing raster stack by the gpw population total
+
+pop_frac_0.17 <- x0.17 / ba_pop_tot
+
+# night gpw
+
+#import LandScan raster
+setwd('/home/vtinney/run/pop/')
+night <- raster('bay.pop.ls.night.tif')
+
+night.popfrac.0.17 <- pop_frac_0.17*night
+
+#write out conus
+writeRaster(night.popfrac.0.17, filename='bay.pop.ls.night.17', format="GTiff", overwrite=TRUE)
