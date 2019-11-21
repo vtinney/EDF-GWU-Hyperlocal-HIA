@@ -23,17 +23,6 @@ x0.17 <- x0.4 + x5.9 + x10.14 + frac17 #sum for ages 0-17
 
 pop_frac_0.17 <- x0.17 / ba_pop_tot
 
-#import LandScan raster
-setwd('/home/vtinney/run/pop/')
-day <- raster('bay.pop.ls.day.tif')
-
-conus.popfrac.0.17 <- pop_frac_0.17*day
-
-#write out conus
-writeRaster(conus.popfrac.0.17, filename='pop.ls.day.17', format="GTiff", overwrite=TRUE)
-
-
-#======================================================================
 # night gpw
 
 #import LandScan raster
@@ -46,52 +35,3 @@ night.popfrac.0.17 <- pop_frac_0.17*night
 writeRaster(night.popfrac.0.17, filename='bay.pop.ls.night.17', format="GTiff", overwrite=TRUE)
 
 
-#======================================================================
-#day wp
-
-setwd('/home/vtinney/pop/world_pop/world_pop_16/clip/')
-
-f.0 <- raster("usa_f_0_wpgl_2016_clip.tif")
-f.1 <- raster("usa_f_1_wpgl_2016_clip.tif")
-f.5 <- raster("usa_f_5_wpgl_2016_clip.tif")
-f.10 <- raster("usa_f_10_wpgl_2016_clip.tif")
-f.15 <- raster("usa_f_15_wpgl_2016_clip.tif")
-m.0 <- raster("usa_m_0_2016_clip.tif")
-m.1 <- raster("usa_m_1_2016_clip.tif")
-m.5 <- raster("usa_m_5_2016_clip.tif")
-m.10 <- raster("usa_m_10_2016_clip.tif")
-m.15 <- raster("usa_m_15_2016_clip.tif")
-   
-
-setwd('/home/vtinney/pop/world_pop/')
-ba_pop_tot <- raster('usa_ppp_2016_clip.tif')
-ba_pop_tot[ba_pop_tot == -9999] <- NA
-
-#create ages 0-17
-frac.w <-  f.15/5 
-frac.m <- m.15/5
-frac2.w <- frac.w*2
-frac2.m <- frac.m*2
-frac17.w <- f.15-frac2.w
-frac17.m <- m.15-frac2.m  
-x0.17 <- f.0 + f.1 + f.5 + f.10 + 
-	 m.0 + f.1 + f.5 + f.10 +
-	 frac17.w + frac17.m
-
-#create population fraction by dividing raster stack by the world pop population total
-pop_frac_0.17 <- x0.17 / ba_pop_tot
-conus.popfrac.0.17 <- pop_frac_0.17*day
-
-
-setwd('/home/vtinney/run/pop/')
-writeRaster(conus.popfrac.0.17, filename='bay.pop.wp.day.17', format="GTiff", overwrite=TRUE)
-
-
-#======================================================================
-# night wp
-
-#import LandScan raster
-night.popfrac.0.17 <- pop_frac_0.17*night
-
-#write out conus
-writeRaster(night.popfrac.0.17, filename='bay.pop.wp.night.17', format="GTiff", overwrite=TRUE)
