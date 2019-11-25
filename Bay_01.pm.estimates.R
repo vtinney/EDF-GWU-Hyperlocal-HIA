@@ -765,7 +765,7 @@ for (i in 1:length(beta.groups)){
           rate.mean <- (rate.min+rate.max)/2
           rate.mean.label <- round(rate.mean,2)
           
-          write.csv(rate_df, paste(names(clip.groups[m]),',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'city.results.csv'))
+          write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'city.results.csv'))
           
         }
           
