@@ -66,9 +66,13 @@ full2$Estimates[full2$Estimates == 'point estimate.tifAF.csv'] <- 'point estimat
 
 full2$Analysis[full2$'Baseline disease rates' == 'CBG baseline disease rates.tifRisk.csv'] <- 'Risk'
 full2$Analysis[full2$'Baseline disease rates' == 'County baseline disease rates.tifRisk.csv'] <- 'Risk'
+full2$Analysis[full2$'Baseline disease rates' == "State of California disease rate.tifRisk.csv"] <- 'Risk'
+full2$Analysis[full2$'Baseline disease rates' == "Zip-code rates.tifRisk.csv"] <- 'Risk'
 
 full2$'Baseline disease rates'[full2$'Baseline disease rates' == 'CBG baseline disease rates.tifRisk.csv'] <- 'CBG baseline disease rates'
 full2$'Baseline disease rates'[full2$'Baseline disease rates' == 'County baseline disease rates.tifRisk.csv'] <- 'County baseline disease rates'
+full2$'Baseline disease rates'[full2$'Baseline disease rates' == "State of California disease rate.tifRisk.csv"] <- 'State of California disease rate'
+full2$'Baseline disease rates'[full2$'Baseline disease rates' == "Zip-code rates.tifRisk.csv"] <- 'Zip-code rates'
 
 full2$Analysis[full2$'Population fraction' == 'GPWv4 age fractions.tifCases.csv'] <- 'Cases'
 full2$'Population fraction'[full2$'Population fraction' == 'GPWv4 age fractions.tifCases.csv'] <- 'GWPv4 age fractions'
@@ -173,6 +177,8 @@ names(cbg2) <- c('County','Tract','GEOID','GEOID_Full','Cases','Population','Rat
 
 cbg2$'Baseline disease rates'[cbg2$'Baseline disease rates' == 'CBG baseline disease rates cbg.results.csv'] <- 'CBG baseline disease rates'
 cbg2$'Baseline disease rates'[cbg2$'Baseline disease rates' == 'County baseline disease rates cbg.results.csv'] <- 'County baseline disease rates'
+cbg2$'Baseline disease rates'[cbg2$'Baseline disease rates' == 'Zip-code rates cbg.results.csv'] <- 'Zip-code baseline disease rates'
+cbg2$'Baseline disease rates'[cbg2$'Baseline disease rates' == 'State of California disease rate cbg.results.csv'] <- 'State of California disease rate'
 
 cbg2$Extent[cbg2$Extent == './Oakland'] <- 'Oakland'
 cbg2$Extent[cbg2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
@@ -221,6 +227,8 @@ co2$Extent[co2$Extent == './Alameda County'] <- 'Alameda County'
 
 co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'CBG baseline disease rates county.results.csv'] <- 'CBG baseline disease rates'
 co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'County baseline disease rates county.results.csv'] <- 'County baseline disease rates'
+co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'Zip-code rates county.results.csv'] <- 'Zip-code baseline disease rates'
+co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'State of California disease rate county.results.csv'] <- 'State of California disease rate'
 
 
 co <- co2[,c(1,5:7,9:13,8,2:4)]
@@ -261,20 +269,9 @@ df <- read.csv("pm.city.results.csv")
 city <- df[,c(44,31,58,59,60)]
 city2 <- cSplit(city, 5:ncol(city), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
-names(city2) <- c('City','Cases','Population','Rate per 100,000','Extent',
+names(city2) <- c('City','Cases','Population','Rate per 100,000','Extent','Outcome',
                 'CRF','Estimates','Concentrations','Population dataset','Population fraction',
                 'Age groups','Baseline disease rates')
-
-city2$Outcome[city2$CRF == 'Bravo et al. 2017'] <- 'CVD hospitalizations'
-city2$Outcome[city2$CRF == 'Di et al. 2017'] <- 'All-cause mortality'
-city2$Outcome[city2$CRF == 'Khreis et al. 2017'] <- 'Asthma incidence'
-city2$Outcome[city2$CRF == 'Krewski et al. 2009'] <- 'All-cause mortality'
-city2$Outcome[city2$CRF == 'Lepuele et al. 2012'] <- 'All-cause mortality'
-city2$Outcome[city2$CRF == 'Lim et al. 2016'] <- 'Asthma ER visits'
-city2$Outcome[city2$CRF == 'Thurston et al. 2016'] <- 'CVD mortality'
-city2$Outcome[city2$CRF == 'Turner et al. 2016'] <- 'CVD mortality'
-
-city2$CRF[city2$CRF == 'Lepuele et al. 2012'] <- 'Lepeule et al. 2012'
 
 city2$Extent[city2$Extent == './Oakland'] <- 'Oakland'
 city2$Extent[city2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
@@ -283,6 +280,8 @@ city2$Extent[city2$Extent == './Alameda County'] <- 'Alameda County'
 
 city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'CBG baseline disease rates city.results.csv'] <- 'CBG baseline disease rates'
 city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'County baseline disease rates city.results.csv'] <- 'County baseline disease rates'
+city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'Zip-code rates city.results.csv'] <- 'Zip-code baseline disease rates'
+city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'State of California disease rate city.results.csv'] <- 'State of California disease rate'
 
 
 list.files()
