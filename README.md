@@ -1,6 +1,6 @@
 
 # Bay area health impact assessment of air pollution
-### Environmental Defense Fund (EDF) and the George Washington University
+### Environmental Defense Fund (EDF) and the George Washington University (GWU) Milken Institute School of Public Health, Department of Environmental and Occupational Health.
 
 ###### Assessing the distribution of air pollution health risks within cities: a neighborhood-scale analysis leveraging high resolution datasets in the Bay area, California. Authors: Veronica A. Southerland, Susan C. Anenberg, Maria Harris, Ananya Roy, Joshua Apte, Perry Hystad, Alina Vodonos, Joel Schwartz. In prep.
 
