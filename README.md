@@ -22,9 +22,9 @@ The framework for the code is as follows:
    * All files to run the code in steps Bay_01-03 is available in the inputs file folder. To run the code, the user needs to download all input files and change the working directories within the code.
  
  * **Intermediary Files** (IF)
-    * IF files are provided for information use only. Contact Veronica Southerland for questions on generating intermediary files.
+    * IF files are provided for informational use only. Contact Veronica Southerland (vtinney@gwu.edu) for questions on generating intermediary files.
  
-    * Bay_IF_Create asthma ER rate: This file creates the dataframe file for asthma Er visits.
+    * Bay_IF_Create asthma ER rate: This file creates the dataframe file for asthma ER visits.
   
     * Bay_IF_Create population fractions based on GPW (25-99 and 65-99 years): This file creates population fraction files for the age groups used in the analysis.
   
