@@ -4,7 +4,7 @@
 
 ###### Assessing the distribution of air pollution health risks within cities: a neighborhood-scale analysis leveraging high resolution datasets in the Bay area, California. Authors: Veronica A. Southerland, Susan C. Anenberg, Maria Harris, Ananya Roy, Joshua Apte, Perry Hystad, Alina Vodonos, Joel Schwartz. In prep.
 
-Contact: Veronica Southerland, vtinney@gwu.edu
+Contact for this repository: Veronica Southerland, vtinney@gwu.edu
 
 This repository provides the base code for the health impact calculations for the Bay area health impact assessment for fine particulate matter (PM2.5), nitrogen dioxide (NO2) and black carbon (BC). 
 
