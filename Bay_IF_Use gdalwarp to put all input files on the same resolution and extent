@@ -14,6 +14,7 @@ gdalwarp -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 
 
 cd /home/vtinney/pollutants
 
+gdalwarp -t_srs "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite bc_vd.tif conc.bc.tif
 gdalwarp -t_srs "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" -te -123.63250000547 36.89249994943 -121.2083333155 38.86499994254 -ts 2909 2367 -dstnodata -9999 -overwrite Global_LUR_NO2_2011_16b_2.tif no2.clip.tif
 
 cd /home/vtinney/CIESEN/GPW_Full
