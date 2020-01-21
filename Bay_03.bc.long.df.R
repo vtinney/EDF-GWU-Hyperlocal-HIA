@@ -45,10 +45,10 @@ full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FAL
 #[97] "dataset.names_9_08" "dataset.names_9_09" "dataset.names_9_10"
 
 
-full2 <- full[,c(19,28,37,46,55,64,73,90:99)]
+full2 <- full[,c(19,28,37,46,55,64,73,90:98)]
 
 # Rename
-names(full2) <- c('sum','mean','min','q25','median','q75','max','Extent','Outcome','Concentrations','CRF','CRF Year','Estimates','Age groups',
+names(full2) <- c('sum','mean','min','q25','median','q75','max','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
                   'Baseline disease rates','Population dataset','Population fraction')
 
 # Make new analysis column
@@ -87,6 +87,16 @@ comb <- full2
 
 # Associate each area of analysis with a total population
 
+comb$pop.total[comb$'Age groups' == "ages 0-17 years" & comb$Extent == 'Alameda County'] <- 377886.9
+comb$pop.total[comb$'Age groups' == "ages 25-99 years" & comb$Extent == 'Alameda County'] <- 1090503
+comb$pop.total[comb$'Age groups' == "ages 65-99 years" & comb$Extent == 'Alameda County'] <- 183904.1
+comb$pop.total[comb$'Age groups' == "all ages" & comb$Extent == 'Alameda County'] <- 1663085
+
+comb$pop.total[comb$'Age groups' == "ages 0-17 years" & comb$Extent == 'Bay area'] <- 1721994
+comb$pop.total[comb$'Age groups' == "ages 25-99 years" & comb$Extent == 'Bay area'] <- 5166662
+comb$pop.total[comb$'Age groups' == "ages 65-99 years" & comb$Extent == 'Bay area'] <- 947944.7
+comb$pop.total[comb$'Age groups' == "all ages" & comb$Extent == 'Bay area'] <- 7755519
+
 comb$pop.total[comb$'Age groups' == "ages 0-17 years" & comb$Extent == 'Oakland'] <- 28152.86
 comb$pop.total[comb$'Age groups' == "ages 25-99 years" & comb$Extent == 'Oakland'] <- 78936.75
 comb$pop.total[comb$'Age groups' == "ages 65-99 years" & comb$Extent == 'Oakland'] <- 13140.52
@@ -103,15 +113,13 @@ comb$sum <- as.numeric(comb$sum)
 # Create a rate per 100,000
 comb$rate.100 <- (comb$sum*100000)/comb$pop.total
 
-comb <- comb[,c(8:12,14:18,13,1:7,20)]
+comb <- comb[,c(8:11,13:17,12,1:7,19)]
 
 # Gather results by type
 long_DF <- comb %>% gather(Anal, Val, "sum":"rate.100")
 
 # Spread by confidence intervals
 x2 <- long_DF %>% spread(Estimates, Val)
-x2 <- x2[,c(1:11,13:15)]
-x2<- x2[complete.cases(x2), ]
 
 # Create a rounded version for tables
 x2$'point estimate' <- as.numeric(x2$'point estimate')
@@ -147,7 +155,7 @@ cbg <- df[,c(12,13,15,25,27,50,51,52)]
 cbg2 <- cSplit(cbg, 8:ncol(cbg), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
 names(cbg2) <- c('County','Tract','GEOID','GEOID_Full','Cases','Population','Rate per 100,000','Extent',
-                 'Outcome','CRF','CRF Year','Estimates','Concentrations','Population dataset','Population fraction',
+                 'Outcome','CRF','Estimates','Concentrations','Population dataset','Population fraction',
                  'Age groups','Baseline disease rates')
 
 
@@ -156,14 +164,17 @@ cbg2$'Baseline disease rates'[cbg2$'Baseline disease rates' == 'County baseline 
 
 cbg2$Extent[cbg2$Extent == './Oakland'] <- 'Oakland'
 cbg2$Extent[cbg2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
+cbg2$Extent[cbg2$Extent == './Bay area'] <- 'Bay area'
+cbg2$Extent[cbg2$Extent == './Alameda County'] <- 'Alameda County'
+
 
 # Spread to Long DF
 
-cbg <- cbg2[,c(1:4,8:11,13:17,12,5:7)]
+cbg <- cbg2[,c(1:4,8:11,13:16,12,5:7)]
 
 long_DF <- cbg %>% gather(Analysis, Val, "Cases":"Rate per 100,000")
 x4 <- long_DF %>% spread(Estimates, Val)
-x4 <- x4[,c(1:14,16:18)]
+#x4 <- x4[,c(1:14,16:18)]
 x4 <- x4[complete.cases(x4), ]
 x4$point.t <- round(x4$"point estimate",0)
 x4$lower.t <- round(x4$"lower CI",0)
@@ -172,3 +183,109 @@ x4$upper.t <- round(x4$"upper CI",0)
 x4$estimate.t <- paste0(x4$point.t,' (',x4$lower.t,'-',x4$upper.t,')',sep='') 
 
 write.csv(x4,'bc.cbg.results.tables.csv')
+
+
+#/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# Replicate for County tables
+
+co <- read.csv('bc.county.results.csv')
+
+#Keep these columns
+# NAMELSAD.x -16
+# hia.val - 41
+# pop.val - 78
+# rate - 79
+# filenames - 80
+
+
+co <- co[,c(16,41,78,79,80)]
+co2 <- cSplit(co, 5:ncol(co), sep=",", stripWhite=TRUE, type.convert=FALSE)
+
+names(co2) <- c('County','Cases','Population','Rate per 100,000','Extent','Outcome',
+                'CRF','Estimates','Concentrations','Population dataset','Population fraction',
+                'Age groups','Baseline disease rates')
+
+co2$Extent[co2$Extent == './Oakland'] <- 'Oakland'
+co2$Extent[co2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
+co2$Extent[co2$Extent == './Bay area'] <- 'Bay area'
+co2$Extent[co2$Extent == './Alameda County'] <- 'Alameda County'
+
+co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'CBG baseline disease rates county.results.csv'] <- 'CBG baseline disease rates'
+co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'County baseline disease rates county.results.csv'] <- 'County baseline disease rates'
+co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'Zip-code rates county.results.csv'] <- 'Zip-code baseline disease rates'
+co2$'Baseline disease rates'[co2$'Baseline disease rates' == 'State of California disease rate county.results.csv'] <- 'State of California disease rate'
+
+
+co <- co2[,c(1,5:7,9:13,8,2:4)]
+
+long_DF <- co %>% gather(Analysis, Val, "Cases":"Rate per 100,000")
+x4 <- long_DF %>% spread(Estimates, Val)
+
+
+x4$Extent[x4$Extent == 'Alameda County' & x4$County != 'Alameda County'] <- 'NA'
+x4$Extent[x4$Extent == 'Oakland'] <- 'NA'
+x4$Extent[x4$Extent == 'West and Downtown Oakland'] <- 'NA'
+x4 <- x4[complete.cases(x4), ]
+
+
+x4$point.t <- round(x4$"point estimate",0)
+x4$lower.t <- round(x4$"lower CI",0)
+x4$upper.t <- round(x4$"upper CI",0)
+
+x4$estimate.t <- paste0(x4$point.t,' (',x4$lower.t,'-',x4$upper.t,')',sep='') 
+
+write.csv(x4,'bc.co.results.tables.csv')
+
+
+#/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# Replicate for city tables
+
+df <- read.csv("bc.city.results.csv")
+
+#Keep these columns
+# NAMELSAD.y - 44
+# hia.val - 31
+# pop.val - 58
+# rate - 59
+# filenames - 60 
+
+
+city <- df[,c(44,31,58,59,60)]
+city2 <- cSplit(city, 5:ncol(city), sep=",", stripWhite=TRUE, type.convert=FALSE)
+
+names(city2) <- c('City','Cases','Population','Rate per 100,000','Extent','Outcome',
+                  'CRF','Estimates','Concentrations','Population dataset','Population fraction',
+                  'Age groups','Baseline disease rates')
+
+city2$Extent[city2$Extent == './Oakland'] <- 'Oakland'
+city2$Extent[city2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
+city2$Extent[city2$Extent == './Bay area'] <- 'Bay area'
+city2$Extent[city2$Extent == './Alameda County'] <- 'Alameda County'
+
+city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'CBG baseline disease rates city.results.csv'] <- 'CBG baseline disease rates'
+city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'County baseline disease rates city.results.csv'] <- 'County baseline disease rates'
+city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'Zip-code rates city.results.csv'] <- 'Zip-code baseline disease rates'
+city2$'Baseline disease rates'[city2$'Baseline disease rates' == 'State of California disease rate city.results.csv'] <- 'State of California disease rate'
+
+
+list.files()
+
+
+city <- city2[,c(1,13,5,6,8:12,7,2:4)]
+
+long_DF2 <- city %>% gather(Analysis, Val, "Cases":"Rate per 100,000")
+
+x4 <- long_DF2 %>% spread(Estimates, Val)
+
+city2$Extent[city2$Extent == 'Oakland'] <- 'NA'
+city2$Extent[city2$Extent == 'West and Downtown Oakland'] <- 'NA'
+x4 <- x4[complete.cases(x4), ]
+
+x4$point.t <- round(x4$"point estimate",)
+x4$lower.t <- round(x4$"lower CI",0)
+x4$upper.t <- round(x4$"upper CI",0)
+
+x4$estimate.t <- paste0(x4$point.t,' (',x4$lower.t,'-',x4$upper.t,')',sep='') 
+write.csv(x4,'bc.city.results.tables.csv')
+
