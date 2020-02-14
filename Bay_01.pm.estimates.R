@@ -234,9 +234,9 @@ names(rate.groups) <- c('ages 0-17 years, State of California disease rate',
                         'ages 65-99 years, County baseline disease rates',
                         'ages 65-99 years, CBG baseline disease rates',
                         'ages 65-99 years, County baseline disease rates')
-conc.groups <- c('pm.mean.15.16','vd_mean.15.16','med.pm.r','min.pm.r','med.vd.15.16','min.vd.15.16')
+conc.groups <- c('pm.mean.15.16','vd_mean.15.16','med.pm.r','min.pm.r','med.vd.15.16','min.vd.15.16','vd.na.2016','vd.na.2016.min','vd.na.2016.med')
 names(conc.groups) <- c('Di et al. 2016','van Donkelaar et al. 2016','Median concentrations Di et al. 2016','Minimum concentrations Di et al. 2016',
-	'Median concentrations van Donkelaar et al. 2016','Minimum concentrations van Donkelaar et al. 2016')
+	'Median concentrations van Donkelaar et al. 2016','Minimum concentrations van Donkelaar et al. 2016','van Donkelaar et al. 2019','Minimum concentrations van Donkelaar et al. 2019','Medium concentrations van Donkelaar et al. 2019')
 
 pop.groups <- c('pop.ls.night.17','pop.ls.night.25','pop.ls.night.65')
 names(pop.groups) <- c('LandScan USA, GPWv4 age fractions',
@@ -439,7 +439,7 @@ for (i in 1:length(beta.groups)){
       
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
-          i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2)){
+          i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 7)){
         
       autoplot(base)  +
         geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
@@ -495,7 +495,7 @@ for (i in 1:length(beta.groups)){
       colnames(mr.df) <- c('lon','lat','val')
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
-          i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2)){
+          i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 7)){
       autoplot(base)  +
         geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
                      fill="grey50",alpha=0.5)+
@@ -551,7 +551,7 @@ for (i in 1:length(beta.groups)){
       mean.hia.label <- round(mean.hia,2)
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
-          i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2)){
+          i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 7)){
       autoplot(base)  +
         geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
                      fill="grey50",alpha=0.5)+
@@ -643,7 +643,7 @@ for (i in 1:length(beta.groups)){
         write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'cbg.results.csv'))
         
         if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
-            i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2)){
+            i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 7)){
         # Map of excess per grid cell
         e <- autoplot(base)  +
           geom_polygon(data = shp_df, aes(x = long, y = lat, group = group, fill = shp_df[,ncol(shp_df)]),alpha=0.7)+
