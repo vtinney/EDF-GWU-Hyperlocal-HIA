@@ -30,7 +30,7 @@ df <- read.csv('pm.results.csv')
 
 # Text to columns
 full0 <- cSplit(df, 1:ncol(df), sep="/", stripWhite=TRUE, type.convert=FALSE)
-full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FALSE)
+full <- cSplit(full0, 91:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
 
 # Keep these column names
@@ -48,11 +48,10 @@ full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FAL
 #[94] "dataset.names_9_05" "dataset.names_9_06" "dataset.names_9_07"
 #[97] "dataset.names_9_08" "dataset.names_9_09"
 
-
-full2 <- full[,c(19,28,37,46,55,64,73,90:98)]
+full2 <- full[,c(19,28,37,46,55,64,73,82,163:171)]
 
 # Rename
-names(full2) <- c('sum','mean','min','q25','median','q75','max','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
+names(full2) <- c('sum','mean','min','q25','median','q75','max','sd','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
                   'Baseline disease rates','Population dataset','Population fraction')
 
 # Make new analysis column
@@ -128,7 +127,7 @@ comb$pop.total[comb$'Age groups' == "all ages" & comb$Extent == 'West and Downto
 comb$sum <- as.numeric(comb$sum)
 comb$rate.100 <- (comb$sum*100000)/comb$pop.total
 
-comb <- comb[,c(8:17,1:7,19)]
+comb <- comb[,c(9:12,14:18,13,1:8,20)]
 
 # Gather results by type
 long_DF <- comb %>% gather(Anal, Val, "sum":"rate.100")
