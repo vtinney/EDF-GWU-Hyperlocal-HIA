@@ -179,10 +179,10 @@ pdf(NULL)
 
 for (i in 1:length(beta.groups)){
   print(beta.groups[i])
-  
+ 
   for (j in 1:length(conc.groups)){
     print(conc.groups[j])
-    
+  
     for (m in 1:length(clip.groups)){
       print(clip.groups[m])
       
@@ -224,7 +224,7 @@ for (i in 1:length(beta.groups)){
         pop.names <- names(pop.groups[2])
         
       }
-      
+  
       a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))
       a[a==0]<-NA
       af <- 1-exp(-beta.groups[i]*a)
@@ -551,8 +551,8 @@ for (i in 1:length(beta.groups)){
         ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.rate.cbg.png',sep=''),dpi=320)
         print('rate.cbg')
       }
-      
-      
+
+
     }
     rm(shp)
     rm(cbg.shp)
