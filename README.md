@@ -18,7 +18,7 @@ The framework for the code is as follows:
   
   * Bay_03.*concentration*.long.df.R - These files convert the csv files created in Bay_02, further format the data, and spread the estimates across columns, such that they are more easily input into tables.
   
- * **Input files** (forthcoming)
+ * **Input files**
    * All files to run the code in steps Bay_01-03 is available in the inputs file folder. To run the code, the user needs to download all input files and change the working directories within the code.
  
  * **Intermediary Files** (IF)
