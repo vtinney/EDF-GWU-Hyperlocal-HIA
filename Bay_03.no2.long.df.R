@@ -31,7 +31,7 @@ df <- read.csv('no2.results.csv')
 
 # Text to columns
 full0 <- cSplit(df, 1:ncol(df), sep="/", stripWhite=TRUE, type.convert=FALSE)
-full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FALSE)
+full <- cSplit(full0, 91:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
 
 # Keep these column names
@@ -50,10 +50,10 @@ full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FAL
 #[97] "dataset.names_9_08" "dataset.names_9_09"
 
 
-full2 <- full[,c(19,28,37,46,55,64,73,90:98)]
+full2 <- full[,c(19,28,37,46,55,64,73,82,163:171)]
 
 # Rename
-names(full2) <- c('sum','mean','min','q25','median','q75','max','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
+names(full2) <- c('sum','mean','min','q25','median','q75','max','sd','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
                   'Baseline disease rates','Population dataset','Population fraction')
 
 # Make new analysis column
@@ -67,12 +67,22 @@ full2$Estimates[full2$Estimates == 'point estimate.tifAF.csv'] <- 'point estimat
 
 full2$Analysis[full2$'Baseline disease rates' == 'CBG baseline disease rates.tifRisk.csv'] <- 'Risk'
 full2$Analysis[full2$'Baseline disease rates' == 'County baseline disease rates.tifRisk.csv'] <- 'Risk'
+full2$Analysis[full2$'Baseline disease rates' == 'Zip-code rates.tifRisk.csv'] <- 'Risk'
+full2$Analysis[full2$'Baseline disease rates' == "State of California disease rate.tifRisk.csv"] <- 'Risk'
 
 full2$'Baseline disease rates'[full2$'Baseline disease rates' == 'CBG baseline disease rates.tifRisk.csv'] <- 'CBG baseline disease rates'
 full2$'Baseline disease rates'[full2$'Baseline disease rates' == 'County baseline disease rates.tifRisk.csv'] <- 'County baseline disease rates'
+full2$'Baseline disease rates'[full2$'Baseline disease rates' == 'Zip-code rates.tifRisk.csv'] <- 'Zip-code rates'
+full2$'Baseline disease rates'[full2$'Baseline disease rates' == "State of California disease rate.tifRisk.csv"] <- 'State of California disease rate'
+
 
 full2$Analysis[full2$'Population fraction' == 'GPWv4 age fractions.tifCases.csv'] <- 'Cases'
 full2$'Population fraction'[full2$'Population fraction' == 'GPWv4 age fractions.tifCases.csv'] <- 'GWPv4 age fractions'
+
+full2$Analysis[full2$'Population dataset' == 'LandScan USA.tifCases.csv'] <- 'Cases'
+full2$'Population dataset'[full2$'Population dataset' == 'LandScan USA.tifCases.csv'] <- 'LandScan USA'
+
+
 
 comb <- full2
 
@@ -125,15 +135,16 @@ comb$pop.total[comb$'Age groups' == "all ages" & comb$Extent == 'West and Downto
 comb$sum <- as.numeric(comb$sum)
 comb$rate.100 <- (comb$sum*100000)/comb$pop.total
 
-comb <- comb[,c(8:11,13:18,12,1:7,19)]
+comb <- comb[,c(9:12,14:18,13,1:8,20)]
+
 
 # Gather results by type
 long_DF <- comb %>% gather(Anal, Val, "sum":"rate.100")
 
 # Spread by confidence intervals
 x2 <- long_DF %>% spread(Estimates, Val)
-x2 <- x2[,c(1:11,16:18)]
-long_DF2 <- x2[complete.cases(x2), ]
+#x2 <- x2[,c(1:11,16:18)]
+#long_DF2 <- x2[complete.cases(x2), ]
 
 # Create a rounded version for tables
 x2$"point estimate" <- as.numeric(x2$"point estimate")
