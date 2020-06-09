@@ -233,9 +233,15 @@ names(rate.groups) <- c('ages 0-17 years, State of California disease rate',
                         'ages 65-99 years, CBG baseline disease rates',
                         'ages 65-99 years, County baseline disease rates',
                         'ages 65-99 years, CBG baseline disease rates')
-conc.groups <- c('larkin.ppb','NO2.ppb','no2.centroids.2','med.lark.r', 'med.gsv.r','min.lark.r', 'min.gsv.r','no2.centroids.med.2','no2.centroids.min.2')
-names(conc.groups) <- c('Larkin et al. 2017','GSV','Bechle et al. 2015','Median concentrations Larkin et al. 2017','Median concentrations GSV',
-                        'Minimum concentrations Larkin et al. 2017','Minimum concentrations GSV','Median concentrations Bechle et al. 2015','Minimum concentrations Bechle et al. 2015')
+
+#conc.groups <- c('larkin.ppb','NO2.ppb','no2.centroids.2','med.lark.r', 'med.gsv.r','min.lark.r', 'min.gsv.r','no2.centroids.med.2','no2.centroids.min.2')
+#names(conc.groups) <- c('Larkin et al. 2017','GSV','Bechle et al. 2015','Median concentrations Larkin et al. 2017','Median concentrations GSV',
+ #                        'Minimum concentrations Larkin et al. 2017','Minimum concentrations GSV','Median concentrations Bechle et al. 2015','Minimum concentrations Bechle et al. 2015')
+
+
+conc.groups <- c('larkin.ppb','NO2.ppb')
+names(conc.groups) <- c('Larkin et al. 2017','GSV')
+
 pop.groups <- c('pop.ls.night.17','pop.ls.night.25','pop.ls.night','pop.ls.night.65')
 names(pop.groups) <- c('LandScan USA, GPWv4 age fractions',
                        'LandScan USA, GPWv4 age fractions',
@@ -435,39 +441,39 @@ for (i in 1:length(beta.groups)){
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
           i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 3)){
-        
-        autoplot(base)  +
-          geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
-                       fill="grey50",alpha=0.5)+
-          geom_tile(data=af.df,aes(lon, lat, fill = val),alpha=0.8) +
-          scale_fill_gradient2("Attributable Fraction (%)",
-                               low = "#3ec267", 
-                               mid = "#fff429",  #ff7e29
-                               high = "#fc0339", ##ff1f40
-                               midpoint = mean.af,
-                               breaks=c(min.af,mean.af,max.af),
-                               labels=c(min.af.label,mean.af.label,max.af.label),
-                               limits=c(min.af, max.af),
-                               na.value = 'grey50',
-                               guide = guide_colourbar(
-                                 direction = "horizontal",
-                                 label=TRUE,
-                                 keyheight = unit(2, units = "mm"),
-                                 title.position = 'top',
-                                 title.hjust = 0.5,
-                                 label.hjust = 0.5,
-                                 barwidth = 15,
-                                 nrow = 1,
-                                 byrow = T,
-                                 label.position = "bottom"))+
-          theme_map()+
-          geom_path(data = shp.f, aes(x = long, y = lat, group = group), 
-                    color = "grey60", size = 0.5)+
-          labs(title='Attributable fraction',
-               caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),'.',sep=''),
-               subtitle=paste0('Range: ',min.af.label,' to ',max.af.label,'%.'),sep='')
-        ggsave(paste0(names(clip.groups[m]),' AF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),'.af.png',sep=''),dpi=320)
-        print('af')
+      
+      autoplot(base)  +
+        geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
+                     fill="grey50",alpha=0.5)+
+        geom_tile(data=af.df,aes(lon, lat, fill = val),alpha=0.8) +
+        scale_fill_gradient2("Attributable Fraction (%)",
+                             low = "#3ec267", 
+                             mid = "#fff429",  #ff7e29
+                             high = "#fc0339", ##ff1f40
+                             midpoint = mean.af,
+                             breaks=c(min.af,mean.af,max.af),
+                             labels=c(min.af.label,mean.af.label,max.af.label),
+                             limits=c(min.af, max.af),
+                             na.value = 'grey50',
+                             guide = guide_colourbar(
+                               direction = "horizontal",
+                               label=TRUE,
+                               keyheight = unit(2, units = "mm"),
+                               title.position = 'top',
+                               title.hjust = 0.5,
+                               label.hjust = 0.5,
+                               barwidth = 15,
+                               nrow = 1,
+                               byrow = T,
+                               label.position = "bottom"))+
+        theme_map()+
+        geom_path(data = shp.f, aes(x = long, y = lat, group = group), 
+                  color = "grey60", size = 0.5)+
+        labs(title='Attributable fraction',
+             caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),'.',sep=''),
+             subtitle=paste0('Range: ',min.af.label,' to ',max.af.label,'%.'),sep='')
+      ggsave(paste0(names(clip.groups[m]),' AF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),'.af.png',sep=''),dpi=320)
+      print('af')
       }
       #==============================================================================================================================================================    
       
@@ -491,38 +497,38 @@ for (i in 1:length(beta.groups)){
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
           i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 3)){
-        autoplot(base)  +
-          geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
-                       fill="grey50",alpha=0.5)+
-          geom_tile(data=mr.df,aes(lon, lat, fill = val),alpha=0.8) +
-          scale_fill_gradient2("Risk per 10,000",
-                               low = "#3ec267", 
-                               mid = "#fff429",  #ff7e29
-                               high = "#fc0339", ##ff1f40
-                               midpoint = mean.mr,
-                               breaks=c(min.mr,mean.mr,max.mr),
-                               labels=c(min.mr.label,mean.mr.label,max.mr.label),
-                               limits=c(min.mr, max.mr),
-                               na.value = 'grey50',
-                               guide = guide_colourbar(
-                                 direction = "horizontal",
-                                 label=TRUE,
-                                 keyheight = unit(2, units = "mm"),
-                                 title.position = 'top',
-                                 title.hjust = 0.5,
-                                 label.hjust = 0.5,
-                                 barwidth = 15,
-                                 nrow = 1,
-                                 byrow = T,
-                                 label.position = "bottom"))+
-          theme_map()+
-          geom_path(data = shp.f, aes(x = long, y = lat, group = group), 
-                    color = "grey60", size = 0.5)+
-          labs(title=paste0('Risk of ',outcome.groups[i],sep=''),
-               caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,'.',sep=''),
-               subtitle=paste0('Range: ',min.mr.label,' to ',max.mr.label,' per 10,000. '),sep='')
-        ggsave(paste0(names(clip.groups[m]),' MR ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',rate.names,'.af.png',sep=''),dpi=320)
-        print('mr')
+      autoplot(base)  +
+        geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
+                     fill="grey50",alpha=0.5)+
+        geom_tile(data=mr.df,aes(lon, lat, fill = val),alpha=0.8) +
+        scale_fill_gradient2("Risk per 10,000",
+                             low = "#3ec267", 
+                             mid = "#fff429",  #ff7e29
+                             high = "#fc0339", ##ff1f40
+                             midpoint = mean.mr,
+                             breaks=c(min.mr,mean.mr,max.mr),
+                             labels=c(min.mr.label,mean.mr.label,max.mr.label),
+                             limits=c(min.mr, max.mr),
+                             na.value = 'grey50',
+                             guide = guide_colourbar(
+                               direction = "horizontal",
+                               label=TRUE,
+                               keyheight = unit(2, units = "mm"),
+                               title.position = 'top',
+                               title.hjust = 0.5,
+                               label.hjust = 0.5,
+                               barwidth = 15,
+                               nrow = 1,
+                               byrow = T,
+                               label.position = "bottom"))+
+        theme_map()+
+        geom_path(data = shp.f, aes(x = long, y = lat, group = group), 
+                  color = "grey60", size = 0.5)+
+        labs(title=paste0('Risk of ',outcome.groups[i],sep=''),
+             caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,'.',sep=''),
+             subtitle=paste0('Range: ',min.mr.label,' to ',max.mr.label,' per 10,000. '),sep='')
+      ggsave(paste0(names(clip.groups[m]),' MR ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',rate.names,'.af.png',sep=''),dpi=320)
+      print('mr')
       }
       #===========================================================================================================================      
       # Crop and map HIA files
@@ -547,52 +553,54 @@ for (i in 1:length(beta.groups)){
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
           i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 3)){
-        autoplot(base)  +
-          geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
-                       fill="grey50",alpha=0.5)+
-          geom_tile(data=hia.df,aes(lon, lat, fill = val),alpha=0.8) +
-          scale_fill_gradient2("Excess cases (n)",
-                               low = "#3ec267", 
-                               mid = "#fff429",  #ff7e29
-                               high = "#fc0339", ##ff1f40
-                               midpoint = mean.hia,
-                               breaks=c(min.hia,mean.hia,max.hia),
-                               labels=c(min.hia.label,mean.hia.label,max.hia.label),
-                               limits=c(min.hia, max.hia),
-                               na.value = 'grey50',
-                               guide = guide_colourbar(
-                                 direction = "horizontal",
-                                 label=TRUE,
-                                 keyheight = unit(2, units = "mm"),
-                                 title.position = 'top',
-                                 title.hjust = 0.5,
-                                 label.hjust = 0.5,
-                                 barwidth = 15,
-                                 nrow = 1,
-                                 byrow = T,
-                                 label.position = "bottom"))+
-          theme_map()+
-          geom_path(data = shp.f, aes(x = long, y = lat, group = group), 
-                    color = "grey60", size = 0.5)+
-          labs(title=paste0(outcome.groups[i],' cases attributable to nitrogen dioxide.',sep=''),
-               caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,',\n',pop.names,'.',sep=''),
-               subtitle=paste0('Range: ',min.hia.label,' to ',max.hia.label,' per grid cell. '),sep='')
-        ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.af.png',sep=''),dpi=300)
-        print('hia')
+      autoplot(base)  +
+        geom_polygon(data = shp.f, aes(x = long, y = lat, group = group), 
+                     fill="grey50",alpha=0.5)+
+        geom_tile(data=hia.df,aes(lon, lat, fill = val),alpha=0.8) +
+        scale_fill_gradient2("Excess cases (n)",
+                             low = "#3ec267", 
+                             mid = "#fff429",  #ff7e29
+                             high = "#fc0339", ##ff1f40
+                             midpoint = mean.hia,
+                             breaks=c(min.hia,mean.hia,max.hia),
+                             labels=c(min.hia.label,mean.hia.label,max.hia.label),
+                             limits=c(min.hia, max.hia),
+                             na.value = 'grey50',
+                             guide = guide_colourbar(
+                               direction = "horizontal",
+                               label=TRUE,
+                               keyheight = unit(2, units = "mm"),
+                               title.position = 'top',
+                               title.hjust = 0.5,
+                               label.hjust = 0.5,
+                               barwidth = 15,
+                               nrow = 1,
+                               byrow = T,
+                               label.position = "bottom"))+
+        theme_map()+
+        geom_path(data = shp.f, aes(x = long, y = lat, group = group), 
+                  color = "grey60", size = 0.5)+
+        labs(title=paste0(outcome.groups[i],' cases attributable to nitrogen dioxide.',sep=''),
+             caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,',\n',pop.names,'.',sep=''),
+             subtitle=paste0('Range: ',min.hia.label,' to ',max.hia.label,' per grid cell. '),sep='')
+      ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.af.png',sep=''),dpi=300)
+      print('hia')
       }
       #=========================================================================================================================
       cbg.shp <- readOGR(dsn=shps, layer=paste(cbg.groups))
       crs(cbg.shp) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
       
       cbg.shp <- crop(cbg.shp, shp)
+      layer <- paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names)
       
       cbg.shp.f <- fortify(cbg.shp) %>% 
         mutate(id = as.numeric(id))
       
+      shp.out <- getwd()
       zone.in <- cbg.shp
       raster.in <- hia
-      
-      shp2 <- ZonalPipe(zone.in, raster.in, stat="sum")
+   
+      shp2 <- ZonalPipe(zone.in, raster.in, shp.out,stat="sum")
       shp2@data <- shp2@data %>% mutate(id = row.names(.))
       shp_df <- fortify(shp2, region = "id")
       shp_df <- shp_df %>% left_join(shp2@data, by = c("id"="id"))
@@ -634,72 +642,73 @@ for (i in 1:length(beta.groups)){
       rate.mean <- (rate.min+rate.max)/2
       rate.mean.label <- round(rate.mean,2)
       
+
       write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'cbg.results.csv'))
       
       if((i == 1 | i == 4 | i == 7 | i == 10 | i == 13 | i == 16 |
           i == 19 | i == 22 | i == 25 | i == 28 | i == 31 | i == 33 | i == 36 ) & (j == 1 | j == 2 | j == 3)){
-        # Map of excess per grid cell
-        e <- autoplot(base)  +
-          geom_polygon(data = shp_df, aes(x = long, y = lat, group = group, fill = shp_df[,ncol(shp_df)]),alpha=0.7)+
-          scale_fill_gradient2("Count (n) cases \n per Census Block Group",
-                               low = "#3ec267", 
-                               mid = "#fff429",  #ff7e29
-                               high = "#fc0339", ##ff1f40
-                               midpoint = r.mean,
-                               na.value='grey50',
-                               breaks=c(r.min,r.mean,r.max),
-                               labels=c(r.min.label,r.mean.label,r.max.label),
-                               limits=c(r.min, r.max),
-                               guide = guide_colourbar(
-                                 direction = "horizontal",
-                                 label=TRUE,
-                                 keyheight = unit(2, units = "mm"),
-                                 title.position = 'top',
-                                 title.hjust = 0.5,
-                                 label.hjust = 0.5,
-                                 barwidth = 15,
-                                 nrow = 1,
-                                 byrow = T,
-                                 label.position = "bottom"))+
-          theme_map()+
-          geom_path(data = cbg.shp.f, aes(x = long, y = lat, group = group), 
-                    color = "grey60", size = 0.1)+
-          labs(title=paste0(outcome.groups[i],' cases attributable to nitrogen dioxide.',sep=''),
-               caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,', \n',pop.names,'.',sep=''),
-               subtitle=paste0('Range: ',r.min.label,' to ',r.max.label,' per CBG. '),sep='')
-        ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.count.cbg.png',sep=''),dpi=320)
-        print('count.cbg')
-        
-        autoplot(base)  +
-          geom_polygon(data = rate_df, aes(x = long.x, y = lat.x, group = group.x, fill = rate_df$rate),alpha=0.7)+
-          scale_fill_gradient2("Rate per 100,000\nper Census Block Group",
-                               low = "#3ec267", 
-                               mid = "#fff429",  #ff7e29
-                               high = "#fc0339", ##ff1f40
-                               midpoint = rate.mean,
-                               na.value='grey50',
-                               breaks=c(rate.min,rate.mean,rate.max),
-                               labels=c(rate.min.label,rate.mean.label,rate.max.label),
-                               limits=c(rate.min, rate.max),
-                               guide = guide_colourbar(
-                                 direction = "horizontal",
-                                 label=TRUE,
-                                 keyheight = unit(2, units = "mm"),
-                                 title.position = 'top',
-                                 title.hjust = 0.5,
-                                 label.hjust = 0.5,
-                                 barwidth = 15,
-                                 nrow = 1,
-                                 byrow = T,
-                                 label.position = "bottom"))+
-          theme_map()+
-          geom_path(data = cbg.shp.f, aes(x = long, y = lat, group = group), 
-                    color = "grey60", size = 0.1)+
-          labs(title=paste0(outcome.groups[i],' cases attributable to nitrogen dioxide.',sep=''),
-               caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,', \n',pop.names,'.',sep=''),
-               subtitle=paste0('Range: ',rate.min.label,' to ',rate.max.label,' per 100,000. '),sep='')
-        ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.rate.cbg.png',sep=''),dpi=320)
-        print('rate.cbg')
+      # Map of excess per grid cell
+      e <- autoplot(base)  +
+        geom_polygon(data = shp_df, aes(x = long, y = lat, group = group, fill = shp_df[,ncol(shp_df)]),alpha=0.7)+
+        scale_fill_gradient2("Count (n) cases \n per Census Block Group",
+                             low = "#3ec267", 
+                             mid = "#fff429",  #ff7e29
+                             high = "#fc0339", ##ff1f40
+                             midpoint = r.mean,
+                             na.value='grey50',
+                             breaks=c(r.min,r.mean,r.max),
+                             labels=c(r.min.label,r.mean.label,r.max.label),
+                             limits=c(r.min, r.max),
+                             guide = guide_colourbar(
+                               direction = "horizontal",
+                               label=TRUE,
+                               keyheight = unit(2, units = "mm"),
+                               title.position = 'top',
+                               title.hjust = 0.5,
+                               label.hjust = 0.5,
+                               barwidth = 15,
+                               nrow = 1,
+                               byrow = T,
+                               label.position = "bottom"))+
+        theme_map()+
+        geom_path(data = cbg.shp.f, aes(x = long, y = lat, group = group), 
+                  color = "grey60", size = 0.1)+
+        labs(title=paste0(outcome.groups[i],' cases attributable to nitrogen dioxide.',sep=''),
+             caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,', \n',pop.names,'.',sep=''),
+             subtitle=paste0('Range: ',r.min.label,' to ',r.max.label,' per CBG. '),sep='')
+      ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.count.cbg.png',sep=''),dpi=320)
+      print('count.cbg')
+      
+      autoplot(base)  +
+        geom_polygon(data = rate_df, aes(x = long.x, y = lat.x, group = group.x, fill = rate_df$rate),alpha=0.7)+
+        scale_fill_gradient2("Rate per 100,000\nper Census Block Group",
+                             low = "#3ec267", 
+                             mid = "#fff429",  #ff7e29
+                             high = "#fc0339", ##ff1f40
+                             midpoint = rate.mean,
+                             na.value='grey50',
+                             breaks=c(rate.min,rate.mean,rate.max),
+                             labels=c(rate.min.label,rate.mean.label,rate.max.label),
+                             limits=c(rate.min, rate.max),
+                             guide = guide_colourbar(
+                               direction = "horizontal",
+                               label=TRUE,
+                               keyheight = unit(2, units = "mm"),
+                               title.position = 'top',
+                               title.hjust = 0.5,
+                               label.hjust = 0.5,
+                               barwidth = 15,
+                               nrow = 1,
+                               byrow = T,
+                               label.position = "bottom"))+
+        theme_map()+
+        geom_path(data = cbg.shp.f, aes(x = long, y = lat, group = group), 
+                  color = "grey60", size = 0.1)+
+        labs(title=paste0(outcome.groups[i],' cases attributable to nitrogen dioxide.',sep=''),
+             caption=paste0(names(beta.groups[i]),', ',names(conc.groups[j]),', ',rate.names,', \n',pop.names,'.',sep=''),
+             subtitle=paste0('Range: ',rate.min.label,' to ',rate.max.label,' per 100,000. '),sep='')
+      ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.rate.cbg.png',sep=''),dpi=320)
+      print('rate.cbg')
       }
       #/////////////////////////////////////////////////////////////////////////////////////////////
       # City aggregation
@@ -769,9 +778,9 @@ for (i in 1:length(beta.groups)){
       # County aggregation
       
       if((i == 1 | i == 2 | i == 3 | i == 4 | i == 5 | i == 6 |
-          i == 10 | i == 11 | i == 12 | i == 13 | i == 14 | i == 15 | i == 16 | i == 17 | 
-          i == 18 | i == 19 | i == 20 | i == 21 | i == 22 | i == 23 | i == 24 | i == 25 | i == 26 | i == 27 |
-          i == 28 | i == 29 | i == 30 | i == 34 | i == 35 | i == 36) & (m != 1 | m != 2 )){
+         i == 10 | i == 11 | i == 12 | i == 13 | i == 14 | i == 15 | i == 16 | i == 17 | 
+         i == 18 | i == 19 | i == 20 | i == 21 | i == 22 | i == 23 | i == 24 | i == 25 | i == 26 | i == 27 |
+         i == 28 | i == 29 | i == 30 | i == 34 | i == 35 | i == 36) & (m != 1 | m != 2 )){
         co.groups <- c('bayco')
         
         co.shp <- readOGR(dsn=shps, layer=paste(co.groups))
