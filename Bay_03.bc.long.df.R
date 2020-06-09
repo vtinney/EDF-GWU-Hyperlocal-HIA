@@ -26,7 +26,7 @@ df <- read.csv('bc.results.csv')
 
 # Text to columns
 full0 <- cSplit(df, 1:ncol(df), sep="/", stripWhite=TRUE, type.convert=FALSE)
-full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FALSE)
+full <- cSplit(full0, 91:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
 
 # Keep these column names
@@ -37,18 +37,17 @@ full <- cSplit(full0, 90:ncol(full0), sep=",", stripWhite=TRUE, type.convert=FAL
 #X50._01 #55
 #X75._01 #64
 #X100._01 #73
-#[82] "dataset.names_1"    "dataset.names_2"    "dataset.names_3"
-#[85] "dataset.names_4"    "dataset.names_5"    "dataset.names_6"
-#[88] "dataset.names_7"    "dataset.names_8"    "dataset.names_9_01"
-#[91] "dataset.names_9_02" "dataset.names_9_03" "dataset.names_9_04"
-#[94] "dataset.names_9_05" "dataset.names_9_06" "dataset.names_9_07"
-#[97] "dataset.names_9_08" "dataset.names_9_09" "dataset.names_9_10"
+#p.sd_1 #82
+
+[163] "dataset.names_9_1" "dataset.names_9_2" "dataset.names_9_3"
+[166] "dataset.names_9_4" "dataset.names_9_5" "dataset.names_9_6"
+[169] "dataset.names_9_7" "dataset.names_9_8" "dataset.names_9_9"
 
 
-full2 <- full[,c(19,28,37,46,55,64,73,90:98)]
+full2 <- full[,c(19,28,37,46,55,64,73,82,163:171)]
 
 # Rename
-names(full2) <- c('sum','mean','min','q25','median','q75','max','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
+names(full2) <- c('sum','mean','min','q25','median','q75','max','sd','Extent','Outcome','Concentrations','CRF','Estimates','Age groups',
                   'Baseline disease rates','Population dataset','Population fraction')
 
 # Make new analysis column
@@ -113,7 +112,7 @@ comb$sum <- as.numeric(comb$sum)
 # Create a rate per 100,000
 comb$rate.100 <- (comb$sum*100000)/comb$pop.total
 
-comb <- comb[,c(8:11,13:17,12,1:7,19)]
+comb <- comb[,c(9:12,14:18,13,1:8,20)]
 
 # Gather results by type
 long_DF <- comb %>% gather(Anal, Val, "sum":"rate.100")
@@ -202,8 +201,8 @@ co <- co[,c(16,41,78,79,80)]
 co2 <- cSplit(co, 5:ncol(co), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
 names(co2) <- c('County','Cases','Population','Rate per 100,000','Extent','Outcome',
-                'CRF','Estimates','Concentrations','Population dataset','Population fraction',
-                'Age groups','Baseline disease rates')
+                 'CRF','Estimates','Concentrations','Population dataset','Population fraction',
+                 'Age groups','Baseline disease rates')
 
 co2$Extent[co2$Extent == './Oakland'] <- 'Oakland'
 co2$Extent[co2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
@@ -255,8 +254,8 @@ city <- df[,c(44,31,58,59,60)]
 city2 <- cSplit(city, 5:ncol(city), sep=",", stripWhite=TRUE, type.convert=FALSE)
 
 names(city2) <- c('City','Cases','Population','Rate per 100,000','Extent','Outcome',
-                  'CRF','Estimates','Concentrations','Population dataset','Population fraction',
-                  'Age groups','Baseline disease rates')
+                'CRF','Estimates','Concentrations','Population dataset','Population fraction',
+                'Age groups','Baseline disease rates')
 
 city2$Extent[city2$Extent == './Oakland'] <- 'Oakland'
 city2$Extent[city2$Extent == './West and Downtown Oakland'] <- 'West and Downtown Oakland'
