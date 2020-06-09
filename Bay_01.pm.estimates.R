@@ -23,7 +23,7 @@ loadfonts()
 library(dplyr)
 library(sf)
 library(OpenStreetMap)
-library(rJava)
+library(rJava)a
 library(gridExtra)
 library(rgeos)
 library(ggpubr)
