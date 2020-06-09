@@ -169,7 +169,7 @@ names(rate.groups) <- c('ages 25-99 years, County baseline disease rates',
 
 
 conc.groups <- c('bc','bc.med','bc.min')
-names(conc.groups) <- c('van Donkelaar','van Donkelaar median concentrations','van Donkelaar minimum concentrations')
+names(conc.groups) <- c('van Donkelaar et al. 2016','van Donkelaar et al. 2016 median concentrations','van Donkelaar et al. 2016 minimum concentrations')
 
 pop.groups <- c('pop.ls.night.25','pop.ls.night.65')
 names(pop.groups) <- c('LandScan USA, GPWv4 age fractions',
@@ -182,10 +182,10 @@ pdf(NULL)
 
 for (i in 1:length(beta.groups)){
   print(beta.groups[i])
-  
+ 
   for (j in 1:length(conc.groups)){
     print(conc.groups[j])
-    
+
     if(i == 1 | i == 2 | i == 3 | i == 7 | i == 8 | i == 9 | i == 13 | i == 14 | i == 15){
       clip.groups <- c('wo_outline','oak', 'alaco2', 'bay')
       names(clip.groups) <- c('West and Downtown Oakland','Oakland','Alameda County','Bay area')
@@ -195,7 +195,7 @@ for (i in 1:length(beta.groups)){
       clip.groups <- c('wo_outline','oak','alaco2')
       names(clip.groups) <- c('West and Downtown Oakland','Oakland','Alameda County')
     }
-    
+  
     for (m in 1:length(clip.groups)){
       print(clip.groups[m])
       
@@ -237,7 +237,7 @@ for (i in 1:length(beta.groups)){
         pop.names <- names(pop.groups[2])
         
       }
-      
+  
       a = raster(paste(concs,'conc.',conc.groups[j],'.tif',sep=''))
       a[a==0]<-NA
       af <- 1-exp(-beta.groups[i]*a)
@@ -564,133 +564,133 @@ for (i in 1:length(beta.groups)){
         ggsave(paste0(names(clip.groups[m]),' PAF ',outcome.groups[i],' ',names(beta.groups[i]),' ',names(conc.groups[j]),' ',pop.names,' ',rate.names,'.rate.cbg.png',sep=''),dpi=320)
         print('rate.cbg')
       }
-      #/////////////////////////////////////////////////////////////////////////////////////////////
-      # City aggregation
-      
-      if(m == 1 | m == 2 | m == 3){} 
-      else{
-        city.shp <- readOGR(dsn=shps, layer=paste(city.groups))
-        crs(city.shp) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-        
-        city.shp <- crop(city.shp, shp)
-        
-        city.shp.f <- fortify(city.shp) %>% 
-          mutate(id = as.numeric(id))
-        
-        zone.in <- city.shp
-        raster.in <- hia
-        
-        shp2 <- ZonalPipe(zone.in, raster.in, stat="sum")
-        shp2@data <- shp2@data %>% mutate(id = row.names(.))
-        shp_df <- fortify(shp2, region = "id")
-        shp_df <- shp_df %>% left_join(shp2@data, by = c("id"="id"))
-        shp_df <- as.data.frame(shp_df)
-        shp_df[,ncol(shp_df)][shp_df[,ncol(shp_df)] == 0] <- NA
-        r.min <- min(shp_df[,ncol(shp_df)],na.rm=TRUE)
-        r.max <- max(shp_df[,ncol(shp_df)],na.rm=TRUE)
-        r.med <- median(shp_df[,ncol(shp_df)],na.rm=TRUE)
-        colnames(shp_df)[ncol(shp_df)] <- 'hia.val'
-        
-        r.mean <- (r.min+r.max)/2
-        r.mean.label <- round(r.mean,2)
-        r.min.label <- round(r.min,2)
-        r.max.label <- round(r.max,2)
-        r.med.label <- round(r.med,2)
-        
-        zone.in <- city.shp #======CHANGE=====#
-        raster.in <- c
-        
-        shp3 <- ZonalPipe(zone.in, raster.in, stat="sum")
-        shp3@data <- shp3@data %>% mutate(id = row.names(.))
-        pop_df <- fortify(shp3, region = "id")
-        pop_df <- pop_df %>% left_join(shp3@data, by = c("id"="id"))
-        pop_df <- as.data.frame(pop_df)
-        pop_df[,ncol(pop_df)][pop_df[,ncol(pop_df)] == 0] <- NA
-        colnames(pop_df)[ncol(pop_df)] <- "pop.val"
-        
-        rate_df <- merge(shp_df,pop_df,by='order')
-        rate_df <- as.data.frame(rate_df)
-        rate_df$rate <- NA
-        rate_df$rate <- (rate_df$hia.val*100000)/rate_df$pop.val
-        #rate_df$rate[rate_df$rate==0]<-NA
-        rate.min <- min(rate_df[,ncol(rate_df)],na.rm=TRUE)
-        rate.max <- max(rate_df[,ncol(rate_df)],na.rm=TRUE)
-        rate.med <- median(rate_df[,ncol(rate_df)],na.rm=TRUE)
-        rate.min.label <- round(rate.min,2)
-        rate.max.label <- round(rate.max,2)
-        rate.med.label <- round(rate.med,2)
-        rate.mean <- (rate.min+rate.max)/2
-        rate.mean.label <- round(rate.mean,2)
-        
-        write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'city.results.csv'))
-        
-      }
-      
-      #///////////////////////////////////////////////////////////////////////////
-      # County aggregation
-      
-      if(m != 1 | m != 2 ){
-        co.groups <- c('bayco')
-        
-        co.shp <- readOGR(dsn=shps, layer=paste(co.groups))
-        crs(co.shp) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
-        
-        co.shp <- crop(co.shp, shp)
-        
-        co.shp.f <- fortify(co.shp) %>% 
-          mutate(id = as.numeric(id))
-        
-        zone.in <- co.shp
-        raster.in <- hia
-        
-        shp2 <- ZonalPipe(zone.in, raster.in, stat="sum")
-        shp2@data <- shp2@data %>% mutate(id = row.names(.))
-        shp_df <- fortify(shp2, region = "id")
-        shp_df <- shp_df %>% left_join(shp2@data, by = c("id"="id"))
-        shp_df <- as.data.frame(shp_df)
-        shp_df[,ncol(shp_df)][shp_df[,ncol(shp_df)] == 0] <- NA
-        r.min <- min(shp_df[,ncol(shp_df)],na.rm=TRUE)
-        r.max <- max(shp_df[,ncol(shp_df)],na.rm=TRUE)
-        r.med <- median(shp_df[,ncol(shp_df)],na.rm=TRUE)
-        colnames(shp_df)[ncol(shp_df)] <- 'hia.val'
-        
-        r.mean <- (r.min+r.max)/2
-        r.mean.label <- round(r.mean,2)
-        r.min.label <- round(r.min,2)
-        r.max.label <- round(r.max,2)
-        r.med.label <- round(r.med,2)
-        
-        zone.in <- co.shp #======CHANGE=====#
-        raster.in <- c
-        
-        shp3 <- ZonalPipe(zone.in, raster.in, stat="sum")
-        shp3@data <- shp3@data %>% mutate(id = row.names(.))
-        pop_df <- fortify(shp3, region = "id")
-        pop_df <- pop_df %>% left_join(shp3@data, by = c("id"="id"))
-        pop_df <- as.data.frame(pop_df)
-        pop_df[,ncol(pop_df)][pop_df[,ncol(pop_df)] == 0] <- NA
-        colnames(pop_df)[ncol(pop_df)] <- "pop.val"
-        
-        rate_df <- merge(shp_df,pop_df,by='order')
-        rate_df <- as.data.frame(rate_df)
-        rate_df$rate <- NA
-        rate_df$rate <- (rate_df$hia.val*100000)/rate_df$pop.val
-        #rate_df$rate[rate_df$rate==0]<-NA
-        rate.min <- min(rate_df[,ncol(rate_df)],na.rm=TRUE)
-        rate.max <- max(rate_df[,ncol(rate_df)],na.rm=TRUE)
-        rate.med <- median(rate_df[,ncol(rate_df)],na.rm=TRUE)
-        rate.min.label <- round(rate.min,2)
-        rate.max.label <- round(rate.max,2)
-        rate.med.label <- round(rate.med,2)
-        rate.mean <- (rate.min+rate.max)/2
-        rate.mean.label <- round(rate.mean,2)
-        
-        write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'county.results.csv'))
-        
-        
-        rm(co.shp)
-      }
-      
+     #/////////////////////////////////////////////////////////////////////////////////////////////
+        # City aggregation
+  
+        if(m == 1 | m == 2 | m == 3){} 
+        else{
+          city.shp <- readOGR(dsn=shps, layer=paste(city.groups))
+          crs(city.shp) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+          
+          city.shp <- crop(city.shp, shp)
+          
+          city.shp.f <- fortify(city.shp) %>% 
+            mutate(id = as.numeric(id))
+          
+          zone.in <- city.shp
+          raster.in <- hia
+          
+          shp2 <- ZonalPipe(zone.in, raster.in, stat="sum")
+          shp2@data <- shp2@data %>% mutate(id = row.names(.))
+          shp_df <- fortify(shp2, region = "id")
+          shp_df <- shp_df %>% left_join(shp2@data, by = c("id"="id"))
+          shp_df <- as.data.frame(shp_df)
+          shp_df[,ncol(shp_df)][shp_df[,ncol(shp_df)] == 0] <- NA
+          r.min <- min(shp_df[,ncol(shp_df)],na.rm=TRUE)
+          r.max <- max(shp_df[,ncol(shp_df)],na.rm=TRUE)
+          r.med <- median(shp_df[,ncol(shp_df)],na.rm=TRUE)
+          colnames(shp_df)[ncol(shp_df)] <- 'hia.val'
+          
+          r.mean <- (r.min+r.max)/2
+          r.mean.label <- round(r.mean,2)
+          r.min.label <- round(r.min,2)
+          r.max.label <- round(r.max,2)
+          r.med.label <- round(r.med,2)
+          
+          zone.in <- city.shp #======CHANGE=====#
+          raster.in <- c
+          
+          shp3 <- ZonalPipe(zone.in, raster.in, stat="sum")
+          shp3@data <- shp3@data %>% mutate(id = row.names(.))
+          pop_df <- fortify(shp3, region = "id")
+          pop_df <- pop_df %>% left_join(shp3@data, by = c("id"="id"))
+          pop_df <- as.data.frame(pop_df)
+          pop_df[,ncol(pop_df)][pop_df[,ncol(pop_df)] == 0] <- NA
+          colnames(pop_df)[ncol(pop_df)] <- "pop.val"
+          
+          rate_df <- merge(shp_df,pop_df,by='order')
+          rate_df <- as.data.frame(rate_df)
+          rate_df$rate <- NA
+          rate_df$rate <- (rate_df$hia.val*100000)/rate_df$pop.val
+          #rate_df$rate[rate_df$rate==0]<-NA
+          rate.min <- min(rate_df[,ncol(rate_df)],na.rm=TRUE)
+          rate.max <- max(rate_df[,ncol(rate_df)],na.rm=TRUE)
+          rate.med <- median(rate_df[,ncol(rate_df)],na.rm=TRUE)
+          rate.min.label <- round(rate.min,2)
+          rate.max.label <- round(rate.max,2)
+          rate.med.label <- round(rate.med,2)
+          rate.mean <- (rate.min+rate.max)/2
+          rate.mean.label <- round(rate.mean,2)
+          
+          write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'city.results.csv'))
+          
+        }
+          
+          #///////////////////////////////////////////////////////////////////////////
+          # County aggregation
+          
+          if(m != 1 | m != 2 | m!=3){
+            co.groups <- c('bayco')
+          
+          co.shp <- readOGR(dsn=shps, layer=paste(co.groups))
+          crs(co.shp) <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs"
+          
+          co.shp <- crop(co.shp, shp)
+          
+          co.shp.f <- fortify(co.shp) %>% 
+            mutate(id = as.numeric(id))
+          
+          zone.in <- co.shp
+          raster.in <- hia
+          
+          shp2 <- ZonalPipe(zone.in, raster.in, stat="sum")
+          shp2@data <- shp2@data %>% mutate(id = row.names(.))
+          shp_df <- fortify(shp2, region = "id")
+          shp_df <- shp_df %>% left_join(shp2@data, by = c("id"="id"))
+          shp_df <- as.data.frame(shp_df)
+          shp_df[,ncol(shp_df)][shp_df[,ncol(shp_df)] == 0] <- NA
+          r.min <- min(shp_df[,ncol(shp_df)],na.rm=TRUE)
+          r.max <- max(shp_df[,ncol(shp_df)],na.rm=TRUE)
+          r.med <- median(shp_df[,ncol(shp_df)],na.rm=TRUE)
+          colnames(shp_df)[ncol(shp_df)] <- 'hia.val'
+          
+          r.mean <- (r.min+r.max)/2
+          r.mean.label <- round(r.mean,2)
+          r.min.label <- round(r.min,2)
+          r.max.label <- round(r.max,2)
+          r.med.label <- round(r.med,2)
+          
+          zone.in <- co.shp #======CHANGE=====#
+          raster.in <- c
+          
+          shp3 <- ZonalPipe(zone.in, raster.in, stat="sum")
+          shp3@data <- shp3@data %>% mutate(id = row.names(.))
+          pop_df <- fortify(shp3, region = "id")
+          pop_df <- pop_df %>% left_join(shp3@data, by = c("id"="id"))
+          pop_df <- as.data.frame(pop_df)
+          pop_df[,ncol(pop_df)][pop_df[,ncol(pop_df)] == 0] <- NA
+          colnames(pop_df)[ncol(pop_df)] <- "pop.val"
+          
+          rate_df <- merge(shp_df,pop_df,by='order')
+          rate_df <- as.data.frame(rate_df)
+          rate_df$rate <- NA
+          rate_df$rate <- (rate_df$hia.val*100000)/rate_df$pop.val
+          #rate_df$rate[rate_df$rate==0]<-NA
+          rate.min <- min(rate_df[,ncol(rate_df)],na.rm=TRUE)
+          rate.max <- max(rate_df[,ncol(rate_df)],na.rm=TRUE)
+          rate.med <- median(rate_df[,ncol(rate_df)],na.rm=TRUE)
+          rate.min.label <- round(rate.min,2)
+          rate.max.label <- round(rate.max,2)
+          rate.med.label <- round(rate.med,2)
+          rate.mean <- (rate.min+rate.max)/2
+          rate.mean.label <- round(rate.mean,2)
+          
+          write.csv(rate_df, paste(names(clip.groups[m]),',',outcome.groups[i],',',names(beta.groups[i]),',',names(conc.groups[j]),',',pop.names,',',rate.names,'county.results.csv'))
+          
+          
+          rm(co.shp)
+    }
+
     }
     rm(shp)
     rm(cbg.shp)
