@@ -17,9 +17,7 @@ The framework for the code is as follows:
   * Bay_02.*concentration*.df.R - These files first extract summary statistics from all output rasters created in Bay_01 files. They then bring in the output csv files created in Bay_01 and clean the data.
   
   * Bay_03.*concentration*.long.df.R - These files convert the csv files created in Bay_02, further format the data, and spread the estimates across columns, such that they are more easily input into tables.
-  
- * **Input files** (forthcoming)
-   * All files to run the code in steps Bay_01-03 is available in the inputs file folder. To run the code, the user needs to download all input files and change the working directories within the code.
+
  
  * **Intermediary Files** (IF)
     * IF files are provided for informational use only. Contact Veronica Southerland (vtinney@gwu.edu) for questions on generating intermediary files.
@@ -29,3 +27,8 @@ The framework for the code is as follows:
     * Bay_IF_Create population fractions based on GPW (25-99 and 65-99 years): This file creates population fraction files for the age groups used in the analysis.
   
     * Bay_IF_Use gdalwarp to put all input files on the same resolution and extent: In order to the run the code, all rasters need to be in the same extent, CRS and resolution. This file reprojects all input files to the same characteristics.
+    
+* **Input files** (branch)
+   * All files to run the code in steps Bay_01-03 is available in the inputs file branch.
+   
+  
