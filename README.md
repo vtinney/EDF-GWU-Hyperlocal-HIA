@@ -54,8 +54,8 @@ CRS: +proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0
 * **conc.NO2.ppb.tif**: Nitrogen dioxide from Google Street View (ppb)
 * **conc.larkin.ppb.tif**: Nitrogen dioxide from Larkin et al. 2017 (ppb)
 * **conc.no2.centroids.2.tif**: Nitrogen dioxide from Bechle et al. 2015 (ppb)
-* **conc.vd.na.2016.tif: Fine particulate matter from van Donkelaar et al. 2019 (North American concentrations, ug/m3)
-* **conc.vd_mean.15.16.tif: Fine particulate matter from van Donkelaar et al. 2016, mean of 2015-2016 (global concentrations, ug/m3)
+* **conc.vd.na.2016.tif**: Fine particulate matter from van Donkelaar et al. 2019 (North American concentrations, ug/m3)
+* **conc.vd_mean.15.16.tif**: Fine particulate matter from van Donkelaar et al. 2016, mean of 2015-2016 (global concentrations, ug/m3)
 
 **Population**
 * **pop.ls.night.17.tif**: LandScan USA, 2017, and Gridded Population of the World v4, 2010, ages 0-17 years
