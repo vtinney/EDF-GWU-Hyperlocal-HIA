@@ -28,7 +28,7 @@ The framework for the code is as follows:
   
     * Bay_IF_Use gdalwarp to put all input files on the same resolution and extent: In order to the run the code, all rasters need to be in the same extent, CRS and resolution. This file reprojects all input files to the same characteristics.
     
-* **Input files** (branch)
+### **Input files** (branch)
    * All files to run the code in steps Bay_01-03 is available in the inputs file branch.
    
-  
+ 
